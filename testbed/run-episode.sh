@@ -9,8 +9,11 @@ MODE="${2:?usage: run-episode.sh <episode> <mode>}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SCEN="$HERE/scenarios/live/$MODE"
 OUT="$HERE/episodes/$EP"
-BIN="$(cd "$HERE/../ebpf-agent" && pwd)/target/debug/ebpf-agent"
-ES="${ES:-http://100.76.120.85:9200}"
+BINDIR="$(cd "$HERE/../ebpf-agent" && pwd)/target"
+[ -x "$BINDIR/release/ebpf-agent" ] && BIN="$BINDIR/release/ebpf-agent" || BIN="$BINDIR/debug/ebpf-agent"
+# Local endpoints and secrets live in .env (gitignored); see .env.example.
+[ -f "$HERE/.env" ] && { set -a; . "$HERE/.env"; set +a; }
+[ -n "${ES:-}" ] || { echo "ES is not set: copy .env.example to .env and fill it in" >&2; exit 2; }
 INDEX="cdr-$(echo "$EP" | tr '[:upper:]' '[:lower:]')"
 POLICY="$HERE/policies/$([ "$MODE" = coop ] || [ "$MODE" = benign ] && echo cooperative || echo covert).json"
 AGENTS="alpha beta"

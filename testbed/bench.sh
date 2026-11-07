@@ -16,7 +16,9 @@ else
   BIN="$BINDIR/debug/ebpf-agent"
   echo "note: release binary missing, using debug (run cargo build --release)" >&2
 fi
-ES="${ES:-http://100.76.120.85:9200}"
+# Local endpoints and secrets live in .env (gitignored); see .env.example.
+[ -f "$HERE/.env" ] && { set -a; . "$HERE/.env"; set +a; }
+[ -n "${ES:-}" ] || { echo "ES is not set: copy .env.example to .env and fill it in" >&2; exit 2; }
 REPEATS=3
 LIVE_REPEATS=0
 ONLY=""

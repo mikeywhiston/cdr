@@ -6,7 +6,22 @@ import urllib.request
 import base64
 import os
 
-KIBANA = os.environ.get("KIBANA", "http://100.76.120.85:5601")
+def _load_dotenv():
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if not os.path.exists(path):
+        return
+    for line in open(path):
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip())
+
+
+_load_dotenv()
+KIBANA = os.environ.get("KIBANA")
+if not KIBANA:
+    sys.exit("KIBANA is not set: add KIBANA=http://host:5601 to testbed/.env")
 USER = os.environ.get("ES_USER", "cdr")
 PASS = open(os.environ.get("ES_PASS_FILE", os.path.expanduser("~/.cdr-es-pass"))).read().strip()
 DV = os.environ["DATA_VIEW_ID"]
