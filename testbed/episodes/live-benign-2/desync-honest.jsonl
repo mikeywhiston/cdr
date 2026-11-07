@@ -1,0 +1,2 @@
+{"kind":"desync","class":"match","variant":"honest","agent":383909,"ts_ns":243300709321542,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":1879060}
+{"kind":"desync","class":"match","variant":"honest","agent":383723,"ts_ns":243293680321542,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":1878889}

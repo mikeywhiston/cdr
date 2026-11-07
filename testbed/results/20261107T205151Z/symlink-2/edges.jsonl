@@ -1,0 +1,5 @@
+{"kind":"scrub","ts_ns":241338639291737,"agent":383723,"dev":29,"ino":2714741,"path":"/shared/symdir/target"}
+{"kind":"scrub","ts_ns":241338639291737,"agent":383723,"dev":29,"ino":2693466,"path":"/shared"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1810108,"dst_tgid":1810216,"dev":29,"ino":2714741,"dt_ns":1951889221,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1951889221,"ts_ns":241339390742092,"path":"/shared/symdir/target"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1810108,"dst_tgid":1810216,"dev":29,"ino":2714741,"dt_ns":751450355,"src_nr":87,"dst_nr":257,"fanout":2,"age_ns":1951889221,"ts_ns":241339390742092,"path":"/shared/symdir/target"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1810108,"dst_tgid":1810216,"dev":29,"ino":2714741,"dt_ns":749375969,"src_nr":88,"dst_nr":257,"fanout":2,"age_ns":1951889221,"ts_ns":241339390742092,"path":"/shared/symdir/target"}

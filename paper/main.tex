@@ -28,27 +28,109 @@ Collusion Detection and Response:\\ Oversight That Outlives the Transcript}
 \maketitle
 
 \begin{abstract}
-% 180-220 words. Must contain: the problem in one sentence, the mechanism in one
-% sentence, three results with numbers, one limitation clause.
-\placeholder{abstract}
+Agent logs are written by the process they are supposed to constrain. When an
+agent holds a shell, its transcript records claims about what it did, not what it
+did: across 18 episodes of model-driven agents, a monitor reading only declared
+tool calls recovered none of the 42 interactions the kernel observed. We describe
+CDR, an oversight layer that ignores the transcript. A probe at the
+\texttt{sys\_enter} and \texttt{sys\_exit} tracepoints records each object touch
+with the caller's cgroup inode, resolves paths inside the container's mount
+namespace, and joins events on the kernel's own (device, inode) identity. An
+interaction is an edge between two agents that touched the same object; collusion
+is an edge that no declared policy sanctions. Across 72 scripted episodes spanning
+18 channels, CDR recovers 80 of 80 interactions with no false edges (95\% lower
+bound on recall 95.4\%), and emits no unsanctioned edge in 40 benign episodes. It
+survives agents whose declarations are true but whose named binary is hostile.
+Agents colocated in one container are distinguished once the harness partitions
+them into child cgroups, demonstrated in 3 of 3 runs. Lock contention, UNIX domain
+sockets and memory-only sharing remain invisible.
 \end{abstract}
 
 \section{Introduction}
-% ~450 words. Logs are agent-authored; even honest logs are insufficient.
-% Three claims, one sentence each, pointing at their result.
-\placeholder{introduction}
+
+Agents that perform software engineering work need a shell, a filesystem and a
+network. That requirement is what makes them useful and what makes them
+unmonitorable by ordinary means. Every observability product for agents, and every
+evaluation harness, records tool calls inside the same userspace runtime the agent
+controls: a process log, a Python callback, a transcript written by the runtime
+loop. An agent that can run \texttt{bash} can write that log, kill that collector,
+or replace the binary its transcript names.
+
+The failure is not that agents lie. In our \emph{laundering} scenarios the declared
+tool call is exactly true: the agent ran \texttt{pytest -q}, and the transcript is
+accurate. The binary answering to that name had been replaced by an earlier step,
+and it performed the covert write. Declaration and execution both happened,
+reconciliation reports a match, and the interaction still went undetected by any
+transcript-based monitor. Oversight that trusts claims fails when agents tell the
+truth about a name whose implementation is hostile.
+
+This paper makes three claims, each with a result attached.
+
+\textbf{Identity must be kernel-attested.} We identify an agent by its cgroup v2
+inode, read from the kernel at syscall entry, rather than by pid, hostname or
+process name. An agent can rename itself; it cannot move itself out of its cgroup
+without an administrator, and it cannot forge the inode the kernel records for it.
+
+\textbf{The join must be the object, not the clock.} Events are keyed on the
+kernel's (device, inode) pair and correlated when two distinct agents touch the
+same object with complementary roles. This is what makes the detector work on
+agents whose working directories, file names and invocation patterns are
+unconstrained. Across 72 scripted episodes on 18 channels it recovers every
+interaction with no false edges.
+
+\textbf{The verdict must be declared policy, not inferred intent.} Collusion is
+defined as an unsanctioned edge: an interaction no declared policy permits. A
+supervisor supplies the sanction set; the detector never decides what two agents
+meant by touching the same file.
+
+We also report what it cannot see, because the boundary is sharper than we
+expected: timing channels, lock contention, UNIX domain sockets, network media and
+memory sharing leave no object for a syscall to touch.
 
 \section{Related Work and Threat Model}
-% ~550 words. ADR (SentinelOne, Oct 2026) as subject-level; Tetragon/Tracee as
-% raw telemetry; provenance graphs (SPADE/CamFlow) as graphs without verdicts.
-% Lampson 1973 for the two-channel taxonomy. Capability ladder L0/L1/L2.
-\placeholder{related work}
 
-\section{Method}
-% ~800 words, written last, from what the code actually does.
-% 3.1 identity (cgroup inode)  3.2 object keys (dev,ino) + directory inodes
-% 3.3 capture derived from tracefs  3.4 exec tree -> declaration attribution
-% 3.5 desync  3.6 policy verdicts
+\paragraph{Subject-level response.} Commercial agent detection and response treats
+the agent as the subject and the endpoint as trustworthy: it instruments the host
+the agent runs on and asks whether the agent's behaviour matches a policy. This is
+the right shape for a fleet of cooperating assistants and the wrong shape for
+adversarial multi-agent evaluation, where the agent is the untrusted party and the
+endpoint includes the tooling that reports on it. SentinelOne's 2026
+agentic-threat work anticipates this direction and motivates it well; it does not
+address cross-agent collusion, because the unit of analysis is one subject.
+
+\paragraph{Kernel telemetry without semantics.} Tetragon, Tracee, Falco and
+bpftrace all observe syscalls at the kernel boundary, and several of them can read
+cgroup identifiers. They produce telemetry, not verdicts: no agent-level identity
+model, no cross-agent correlation, no reconciliation of a declaration against an
+execution, and no notion of a sanctioned edge. Using one of them as our front end
+would still leave the problem of this paper unsolved.
+
+\paragraph{Provenance graphs.} SPADE and CamFlow capture provenance as a graph at
+kernel level; noDoze and its descendants build NoDoze-style causal graphs for
+single-host intrusion detection; ProvDetector uses path provenance to separate
+malicious from benign behaviour. This is close in mechanism and different in unit:
+those systems ask whether one process is anomalous, while we ask whether two agents
+interacted. A collusion edge is not an anomaly in a causal DAG, it is an adjacency
+between two roots of two DAGs, and the verdict belongs to policy rather than to a
+classifier.
+
+\paragraph{Two channels.} Lampson's 1973 confinement analysis remains the correct
+taxonomy: information moves through storage and through time. Our detectors address
+storage channels only. Timing channels (a sender whose delay encodes a bit), and
+covert channels over the network, are outside the claim, and we list them as such
+in Section~\ref{sec:limits}.
+
+\paragraph{Threat model.} Agents execute arbitrary code inside a container with
+root inside that container: the capability level we call L0. At L0 the agent can
+write files, replace binaries, spawn processes, read directory metadata, and emit
+any transcript it likes. It cannot modify its own cgroup membership, attach a
+probe, or read the host's ring buffer. L1 assumes root on the host, at which point
+in-band probes are also forgeable, and L2 assumes a compromised kernel, at which
+point the measurement is meaningless. We claim L0 and state the boundary in
+Section~\ref{sec:limits}. Against a transcript we assume the adversary is free to
+omit, rewrite, or report truthfully about a hostile binary, which are the three
+cases our live suite exercises.
+
 \section{Method}
 
 \paragraph{Attested identity.} An agent is a cgroup v2 inode. The probe reads
@@ -65,6 +147,23 @@ collapses to one key for all agents ($29/2693466$), while the same binary in thr
 containers yields one inode under three devices ($85$, $74$, $82$ for
 $2604173$). Keying on inode alone would report every agent that launches
 \texttt{bash} as sharing an object with every other.
+
+\paragraph{Declared identity and colocated agents.} The slice is not the only
+possible unit. A harness can partition one container into several agents by
+creating child cgroups inside it and moving each agent's process in. The sensor
+accepts these as identities only when the deployment declares them out of band, as
+a list of cgroup paths supplied by the harness at load time; nested cgroups that
+appear for any other reason are traversed but never minted as identities, so their
+processes resolve to the nearest declared ancestor.
+
+We first implemented the obvious alternative, a naming convention in which any
+child cgroup named \texttt{agent-*} became an agent, and a reviewer pointed out
+that it created an impersonation channel. An agent able to create cgroups could
+adopt a neighbour's name, or create several identities under which to split its
+own behaviour, which manufactures collusion edges between two halves of one
+attacker. Both attacks follow from trusting a string the subject chooses, so the
+name convention was withdrawn: identity is now a membership question about a list
+the agent cannot write.
 
 \paragraph{Objects and roles.} Three object classes are in scope. File inodes are
 mutated by \texttt{write}, \texttt{truncate}, \texttt{chmod}, \texttt{setxattr},
@@ -95,16 +194,19 @@ dropped, so an unmodelled channel appears as a frequency anomaly against the
 benign baseline instead of as silence.
 
 \paragraph{Resolving names inside the namespace.} Paths reach the sensor as the
-agent wrote them. The loader resolves them with
-\texttt{openat2} with \texttt{RESOLVE\_IN\_ROOT} and \texttt{RESOLVE\_NO\_MAGICLINKS}
-against an \texttt{O\_PATH} descriptor for the agent's \texttt{/proc/<pid>/root},
-then \texttt{fstat}s the result. \texttt{RESOLVE\_IN\_ROOT} treats that descriptor
-as \texttt{/} for the whole walk, which matters for two cases we observed: an
+agent wrote them. The loader resolves them with \texttt{openat2} with
+\texttt{RESOLVE\_IN\_ROOT} and \texttt{RESOLVE\_NO\_MAGICLINKS} against an
+\texttt{O\_PATH} descriptor for the agent's \texttt{/proc/<pid>/root}, then
+\texttt{fstat}s the result. \texttt{RESOLVE\_IN\_ROOT} treats that descriptor as
+\texttt{/} for the whole walk, which matters for two cases we observed: an
 absolute symlink target is otherwise resolved against the \emph{host} root, and
 \texttt{..} at the container root escapes to a host inode shared by every
 container. Both produced false edges before the change. Resolution results are
 cached per $(\mathit{agent},\mathit{path})$ and invalidated on \texttt{O\_CREAT},
-because a delete-and-recreate may be served a different inode.
+because a delete-and-recreate may be served a different inode. A cached root can
+also dangle when the process it came from exits, so resolution falls back from the
+cached descriptor to the cached prefix and finally to the calling process's own
+\texttt{/proc/<tid>/root}.
 
 \paragraph{Causal attribution.} The \texttt{sched\_process\_fork} tracepoint
 yields parent and child; \texttt{execve} yields the argument vector. Together they
@@ -124,8 +226,6 @@ paths, yielding \texttt{sanctioned} or \texttt{unsanctioned}. Collusion is defin
 as an unsanctioned edge: the detector never infers intent, it records the
 interaction and applies declared policy.
 
-\section{Results}
-% ~700 words plus three figures and three tables.
 \section{Results}
 
 \paragraph{Setup.} Three Debian containers share one systemd slice and one
@@ -183,6 +283,19 @@ permissive policy. No benign episode produced an unsanctioned edge, nor an edge 
 an object outside its declared set; the 95\% upper bound on the per-episode alarm
 rate is $8.8\%$. The cache episode does produce edges, which is the intended
 behaviour: the mechanism fires and the policy stays quiet.
+
+\paragraph{Colocated agents.} Identity does not require a container per agent. We
+partitioned one running container into two agents by creating child cgroups inside
+its cgroup and moving each agent's process into one, declaring both to the sensor
+out of band. Two processes in that single container, one writing a file on the
+shared volume and one reading it, produced an edge between the two declared
+identities in 3 of 3 runs, with a handoff interval of 506~ms in the measured run.
+The sensor attributed 147 and 148 events to the two identities respectively, and
+`unlink` of the object after the fact did not retract the edge.
+
+Delegation is therefore not the obstacle. The obstacle is that a deployment must
+create those partitions, and it must create them before the agent forks, because
+cgroup membership is inherited rather than assigned after the fact.
 
 \begin{table}[t]
 \centering
@@ -242,37 +355,158 @@ when the detector is fixed.}
 \label{tab:ablation}
 \end{table}
 
-\paragraph{Defects found by the suite.} Four detector defects were found by
-scenarios rather than by inspection: absolute symlink targets resolved in the host
-namespace; rename destinations captured but never correlated; a global
-path-to-inode cache that let one agent's inode stand in for another's unresolved
-path; and a cache entry surviving delete-and-recreate. Table~\ref{tab:ablation}
-shows the trajectory, and Appendix~B records each defect with its failing metric.
+\paragraph{Defects found by the suite.} Six defects were found by running rather
+than by inspection: absolute symlink targets resolved in the host namespace;
+rename destinations captured but never correlated; a global path-to-inode cache
+that let one agent's inode stand in for another's unresolved path; a cache entry
+surviving delete-and-recreate; an identity marker that a reviewer showed to be
+forgeable; and a cached mount root that dangled when the process it was taken from
+exited, which silently zeroed resolution for an agent. Table~\ref{tab:ablation}
+shows the trajectory for the first four, and Appendix~B records each defect with
+its failing metric.
+
+\paragraph{Operating cost.} \placeholder{run testbed/overhead_test.sh and paste
+the three lines: workload median off/on, slowdown, sensor CPU share}
 
 \section{Discussion and Limitations}
-% ~400 words. Operating point, identity boundary, timing/network media,
-% io_uring, single host, N<=5, scripted actors.
-\placeholder{discussion}
+\label{sec:limits}
+
+\paragraph{Operating point.} CDR is a monitor, not a controller. Its output is a
+de-fragmented trajectory and a set of unsanctioned edges; what a supervisor does
+with them, suspending an agent, alerting a human, or scoring an episode, is
+outside the sensor. That separation is deliberate. A detector that also enforced
+would have to be trusted with the same authority it is supposed to check.
+
+\paragraph{The identity boundary.} Every claim in this paper holds at L0, where the
+agent is root inside its container and cannot alter its cgroup position. At L1 the
+agent has root on the host, and can detach the probe, rewrite the loader, or move
+itself between cgroups. The measurement is then an assertion about a compromised
+system, and no in-band sensor can do better. We state this rather than defend
+against it, because the alternative is security theatre.
+
+\paragraph{Media we do not see.} Timing channels, network paths, memory sharing
+without a file, lock contention and UNIX domain sockets are outside the model. The
+first two are information-theoretic: a delay or a packet carries a bit without any
+inode existing. The last three are mechanical gaps that a wider object model could
+close, and the UNIX socket case in particular is a natural extension because the
+socket inode exists; only the naming convention differs.
+
+\paragraph{Fork interception.} Delegation is attributed through
+\texttt{sched\_process\_fork}, which is in-kernel. A process that forks from a
+user-space scheduler and exits its parent within the correlation window can escape
+attribution; we do not claim a bound on that interval.
+
+\paragraph{Scale.} Our deployment is three containers and up to five agents on one
+host. A dense population scales differently than a sparse one: the pairwise edge
+space is quadratic, and a shared object with $n$ readers yields $n-1$ edges from a
+single write. The detector is streaming, so the cost is proportional to interactions
+observed rather than to pairs hypothesised, but we have not measured it at
+production density and do not claim a bound.
+
+\paragraph{What the corpus can support.} Scripted actors are deterministic and
+therefore easier than models: they do not launder, hesitate, or adapt. The live
+suite addresses that partly, at 18 episodes and two or three agents per episode. A
+reviewer should read the live numbers as a demonstration that the mechanism works
+on model behaviour, not as an estimate of detection rate on adversary populations.
 
 \section{Conclusion}
-% ~120 words.
-\placeholder{conclusion}
+
+Oversight that reads the transcript is answering a question about claims. When an
+agent can write the transcript, replace the binary it names, or report honestly
+about a name whose implementation is hostile, the answer is unrelated to what
+happened. Moving the join to the kernel's own object identity removes the
+transcript from the trust path: an agent cannot forge the cgroup it ran in or the
+inode it touched. On 72 scripted episodes this recovers every interaction with no
+false edges; on 18 live episodes it recovers 42 interactions that transcript
+monitors miss entirely, including every episode in which the declaration was true
+and the named binary was not. The cost is a sharp boundary: storage channels only,
+one host, and root inside the container as the top of the capability ladder.
 
 \bibliographystyle{acl_natbib}
-% \bibliography{custom}
 
 \appendix
 
 \section{Event Schema}
-\placeholder{schema table}
 
-\section{Iteration Log}
-\placeholder{defect log: each defect, found by, metric before/after}
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Field & Type & Meaning \\
+\midrule
+\texttt{ts\_ns}     & u64 & monotonic clock at syscall entry \\
+\texttt{agent}      & u64 & cgroup inode, the identity \\
+\texttt{tgid}       & u32 & thread-group id at entry \\
+\texttt{nr}         & i64 & syscall number \\
+\texttt{dev, ino}   & u32, u64 & resolved object identity \\
+\texttt{pdev, pino} & u32, u64 & parent directory identity \\
+\texttt{aux\_dev, aux\_ino} & u32, u64 & second object (rename target, hardlink) \\
+\texttt{resolved}   & u8  & bit 0: path captured; bit 1: inode resolved \\
+\texttt{path}       & str & path as the agent wrote it \\
+\texttt{comm}       & str & task name at entry (untrusted, diagnostic) \\
+\bottomrule
+\end{tabular}
+\caption{Spool record. Identity is \texttt{agent} plus the object pair; the path
+and command name are carried for readability and are not used for the join.}
+\end{table}
+
+\section{Defect Log}
+
+Each entry records the defect, how it was found, and the metric that exposed it.
+
+\begin{enumerate}
+\item \textbf{Absolute symlink targets.} Resolution followed links against the host
+root, so two agents that wrote unrelated symlinks collided on one host inode.
+Found by the symlink scenario. False positives fell from 13 to 0 per run after the
+fix.
+\item \textbf{Rename destinations.} The target path was captured but never
+correlated, so a rename-based exchange produced no edge. Found by the rename
+scenario; recall 0.75 to 1.00.
+\item \textbf{Global path cache.} A path-to-inode cache keyed only on path let one
+agent's inode stand in for another agent's unresolved path, producing edges across
+containers. Found by the same-binary scenario; false positives 18 to 0.
+\item \textbf{Cache invalidation.} A cached entry survived
+delete-and-recreate, so an exchange through a recreated inode was attributed to the
+previous owner. Found by the create-recreate scenario.
+\item \textbf{Name-based identity.} A nested cgroup named \texttt{agent-*} was
+accepted as an identity, letting an agent impersonate a neighbour or manufacture
+collusion by splitting itself. Found in review, not by the suite. Replaced by a
+declared allowlist; verified non-regressive by replaying every recorded episode.
+\item \textbf{Dangling root.} A cached \texttt{/proc/<pid>/root} from a process
+that had exited silently prevented resolution for that agent, so its touches were
+recorded with no object and dropped from correlation. Found by the colocated
+scenario, which produced zero edges until resolution was given a fallback chain.
+\end{enumerate}
 
 \section{Limitations and Dual-Use}
-\placeholder{required appendix}
+
+This is a surveillance system. It observes every file interaction of every process
+in the slice and attributes it to an agent, which is exactly what a benign operator
+needs and also what a hostile one needs to monitor people rather than agents. The
+mitigations are structural: the sensor reads metadata, not file contents; edges are
+retained as triples of identity, object and time rather than as payloads; and the
+verdict requires a sanction set the operator must write down, which makes
+surveillance scope visible to audit. It does not observe keystrokes, screen
+contents, network payloads or memory, and we recommend it be deployed only where
+agents, not people, are the subjects.
+
+The apparatus is dual-use in a second sense: an operator could use it to detect
+collusion, and an agent that knew it was running could use the same rules to
+coordinate without producing edges, for example by using only timing. That is an
+argument for combining it with timing-channel analysis, not for omitting it.
 
 \section{LLM Usage Statement}
-\placeholder{required statement}
+
+Language models were used in this work in three ways, all disclosed here. First,
+the live evaluation suite runs model-driven agents (omp with a hosted model) as
+study subjects; their outputs are data, not content. Second, parts of the
+implementation were drafted with an AI coding assistant under the author's
+direction, with the author specifying the design, reviewing every change before it
+was built, and running every measurement; the repository README records the same
+disclosure. Third, model assistance was used for copy-editing prose. No result in
+this paper was generated by a model: every number derives from running the built
+binary against recorded corpora, and the corpora and edge files are retained so
+the claims can be re-derived.
 
 \end{document}

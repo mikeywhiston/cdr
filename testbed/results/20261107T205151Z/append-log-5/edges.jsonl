@@ -1,0 +1,2 @@
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1763800,"dst_tgid":1763910,"dev":29,"ino":2718113,"dt_ns":1739855053,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1739855053,"ts_ns":240117506220447,"path":"/shared/applog"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1763800,"dst_tgid":1763910,"dev":29,"ino":2718113,"dt_ns":1339566095,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1739855053,"ts_ns":240117506220447,"path":"/shared/applog"}

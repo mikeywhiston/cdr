@@ -1,0 +1,5 @@
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1595066,"dst_tgid":1595146,"dev":74,"ino":2712070,"dt_ns":222380508,"src_nr":83,"dst_nr":332,"fanout":2,"age_ns":317627855,"ts_ns":226211191982809,"path":".."}
+{"kind":"scrub","ts_ns":226211196974613,"agent":383909,"dev":74,"ino":2714670,"path":"/tmp/payload"}
+{"kind":"scrub","ts_ns":226211196974613,"agent":383909,"dev":85,"ino":2604154,"path":"/tmp"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1595109,"dst_tgid":1595235,"dev":29,"ino":2714674,"dt_ns":1922297556,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1922297556,"ts_ns":226213037763245,"path":"/shared/tmpfile"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1595109,"dst_tgid":1595235,"dev":29,"ino":2714674,"dt_ns":722038783,"src_nr":82,"dst_nr":257,"fanout":2,"age_ns":1922297556,"ts_ns":226213037763245,"path":"/shared/tmpfile"}

@@ -1,4 +1,4 @@
 testbed/.env
-testbed/episodes/
-ebpf-agent/target/
-*.jsonl
+/ebpf-agent/target/
+/*.jsonl
+testbed/*.jsonl

@@ -1,0 +1,6 @@
+{"kind":"desync","class":"match","variant":"tampered","agent":383723,"ts_ns":243230210321562,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":1876572}
+{"kind":"desync","class":"mismatch","variant":"tampered","agent":383909,"ts_ns":243236653321562,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"desync","class":"surplus","variant":"tampered","agent":383909,"ts_ns":243236653321562,"unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"attribution","variant":"tampered","ts_ns":243238748910507,"dev":29,"ino":2723771,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"unaccounted","verdict":"sanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":243238748910507,"dev":29,"ino":2723771,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"unaccounted","verdict":"sanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":243238749322088,"dev":29,"ino":2723772,"path":"/shared/cache/alpha.out","src_declared":"python3 /tmp/payload/a.py","dst_declared":"unaccounted","verdict":"sanctioned"}

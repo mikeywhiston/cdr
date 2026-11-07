@@ -1,0 +1,1 @@
+es-sink: shipped=34 failed=0 mean_lag_ms=260 dead_letter=/tmp/es-dead.ndjson

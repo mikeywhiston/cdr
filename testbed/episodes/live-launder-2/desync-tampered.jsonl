@@ -1,0 +1,6 @@
+{"kind":"desync","class":"match","variant":"tampered","agent":383723,"ts_ns":243365389321562,"declared":"pytest -q","observed":"pytest -q","tgid":1881220}
+{"kind":"desync","class":"mismatch","variant":"tampered","agent":383909,"ts_ns":243371292321562,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"desync","class":"surplus","variant":"tampered","agent":383909,"ts_ns":243371292321562,"unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"attribution","variant":"tampered","ts_ns":243371382701093,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":243371382701093,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":243371382701093,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}

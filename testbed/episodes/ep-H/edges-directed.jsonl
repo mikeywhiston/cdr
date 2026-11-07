@@ -1,0 +1,2 @@
+{"kind":"edge","src":383723,"dst":383909,"dev":29,"ino":2693466,"dt_ns":6015871800,"src_nr":257,"dst_nr":257,"edge_kind":"directed","ts_ns":217194497838494,"path":"/shared"}
+{"kind":"edge","src":383723,"dst":383909,"dev":29,"ino":2693466,"dt_ns":5015124186,"src_nr":87,"dst_nr":257,"edge_kind":"directed","ts_ns":217194497838494,"path":"/shared"}

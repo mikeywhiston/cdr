@@ -1,0 +1,10 @@
+[INFO  ebpf_agent] fork tracepoint on, parent_off=12 child_off=20
+[INFO  ebpf_agent] resolved 3 container namespace roots
+[INFO  ebpf_agent] agent ino=383909 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-31b13adc1be024ec6215581bc5713c606444f97b946432a69d366f5fde2aaf2f.scope
+[INFO  ebpf_agent] agent ino=383723 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope
+[INFO  ebpf_agent] agent ino=383816 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-32b09e4de437e42f881b7cc54d52b4e64fb1ae7d6ee75e8e291f84098d932232.scope
+[INFO  ebpf_agent] binary_built_unix=1794086414
+[INFO  ebpf_agent] streaming -> /home/mikey/Documents/swarm-adr/testbed/episodes/live-launder-3/events.jsonl / /home/mikey/Documents/swarm-adr/testbed/episodes/live-launder-3/edges.jsonl; Ctrl-C to stop
+es-sink: shipped=1093 failed=0 queue_dropped=0
+Exiting... events_ok, drops=0, payload_drops=0, oos=2290751, syscalls=70275
+[INFO  ebpf_agent] nr_hist_top10=futex(202:31402) madvise(28:6626) sched_yield(24:4885) pread64(17:4154) fstat(5:2420) close(3:2215) fcntl(72:1972) openat(257:1950) rt_sigaction(13:1405) newfstatat(262:1148)

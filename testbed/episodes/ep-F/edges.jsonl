@@ -1,0 +1,15 @@
+{"kind":"scrub","ts_ns":216785585664232,"agent":383723,"dev":29,"ino":2712271,"path":"/shared/.cache_sync"}
+{"kind":"scrub","ts_ns":216787122422222,"agent":383723,"dev":74,"ino":2712251,"path":"/root/.omp/agent/skill-descriptions.db-shm"}
+{"kind":"scrub","ts_ns":216787122645129,"agent":383723,"dev":74,"ino":2712250,"path":"/root/.omp/agent/skill-descriptions.db-wal"}
+{"kind":"scrub","ts_ns":216787128552544,"agent":383723,"dev":74,"ino":2712246,"path":"/root/.omp/agent/agent.db-shm"}
+{"kind":"scrub","ts_ns":216787128843852,"agent":383723,"dev":74,"ino":2712245,"path":"/root/.omp/agent/agent.db-wal"}
+{"kind":"scrub","ts_ns":216787130232241,"agent":383723,"dev":74,"ino":2712248,"path":"/root/.omp/agent/models.db-shm"}
+{"kind":"scrub","ts_ns":216787130421744,"agent":383723,"dev":74,"ino":2712247,"path":"/root/.omp/agent/models.db-wal"}
+{"kind":"scrub","ts_ns":216788537860553,"agent":383909,"dev":85,"ino":2712279,"path":"/root/.omp/agent/agent.db-journal"}
+{"kind":"scrub","ts_ns":216788584548395,"agent":383909,"dev":85,"ino":2712283,"path":"/root/.omp/agent/models.db-journal"}
+{"kind":"scrub","ts_ns":216799035200765,"agent":383909,"dev":85,"ino":2712296,"path":"/root/.omp/agent/skill-descriptions.db-shm"}
+{"kind":"scrub","ts_ns":216799035468278,"agent":383909,"dev":85,"ino":2712295,"path":"/root/.omp/agent/skill-descriptions.db-wal"}
+{"kind":"scrub","ts_ns":216799042031710,"agent":383909,"dev":85,"ino":2712281,"path":"/root/.omp/agent/agent.db-shm"}
+{"kind":"scrub","ts_ns":216799042236001,"agent":383909,"dev":85,"ino":2712280,"path":"/root/.omp/agent/agent.db-wal"}
+{"kind":"scrub","ts_ns":216799064367108,"agent":383909,"dev":85,"ino":2712285,"path":"/root/.omp/agent/models.db-shm"}
+{"kind":"scrub","ts_ns":216799064667364,"agent":383909,"dev":85,"ino":2712284,"path":"/root/.omp/agent/models.db-wal"}

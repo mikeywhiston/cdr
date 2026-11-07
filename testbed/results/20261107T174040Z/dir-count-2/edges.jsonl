@@ -1,0 +1,7 @@
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1629549,"dst_tgid":1629623,"dev":74,"ino":2712070,"dt_ns":279805269,"src_nr":83,"dst_nr":332,"fanout":2,"age_ns":388427537,"ts_ns":228669037938507,"path":"/"}
+{"kind":"scrub","ts_ns":228669045301813,"agent":383909,"dev":74,"ino":2715613,"path":"/tmp/payload"}
+{"kind":"scrub","ts_ns":228669045301813,"agent":383909,"dev":85,"ino":2604154,"path":"/tmp"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1629592,"dst_tgid":1629698,"dev":29,"ino":2714585,"dt_ns":1956323211,"src_nr":83,"dst_nr":257,"fanout":2,"age_ns":1956323211,"ts_ns":228670903358161,"path":"/shared/dirchan"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1629592,"dst_tgid":1629698,"dev":29,"ino":2714585,"dt_ns":756194146,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1956323211,"ts_ns":228670903358161,"path":"/shared/dirchan"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1629592,"dst_tgid":1629698,"dev":29,"ino":2714585,"dt_ns":755881506,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1956323211,"ts_ns":228670903358161,"path":"/shared/dirchan"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1629592,"dst_tgid":1629698,"dev":29,"ino":2714585,"dt_ns":755741506,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1956323211,"ts_ns":228670903358161,"path":"/shared/dirchan"}
