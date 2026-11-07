@@ -2,3 +2,4 @@ testbed/.env
 /ebpf-agent/target/
 /*.jsonl
 testbed/*.jsonl
+BLUEPRINT.md
