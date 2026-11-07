@@ -1,0 +1,15 @@
+=== digest 2026-11-07T23:01:19Z ===
+bench=1 colocated=1 overhead=0
+
+-- scripted totals --
+
+-- live --
+
+-- colocated --
+
+-- overhead --
+workload median   off=0.946s  on=0.941s  slowdown=-0.53%
+sensor CPU        0.00s over 0.00s wall = 0% of one core
+events captured   0
+
+full log: /home/mikey/Documents/swarm-adr/testbed/validation-20261107T230059Z.log

@@ -35,10 +35,12 @@ sudo ./target/release/ebpf-agent run \
 
 ```sh
 cd testbed
-sudo ./bench.sh --repeats 4      # scripted scenarios, deterministic
-sudo ./bench.sh --live           # model-driven agents, in-process payloads
-sudo ./colocated_test.sh         # two agents inside one container
-sudo ./overhead_test.sh          # sensor cost against a fixed workload
+cp .env.example .env             # ES, Kibana, API key (already set locally)
+sudo ./bench.sh --repeats 4              # scripted scenarios, deterministic
+sudo ./bench.sh --live-repeats 3         # model-driven agents
+sudo ./colocated_test.sh                 # two agents inside one container
+sudo ./overhead_test.sh                  # sensor cost against a fixed workload
+sudo ./validate.sh                       # all of the above, unattended
 ```
 
 ## Layout

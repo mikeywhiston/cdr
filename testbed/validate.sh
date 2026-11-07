@@ -2,8 +2,13 @@
 # Every validation pass in one unattended go: scripted suite, live suite,
 # co-located identity, and sensor cost. Safe to run in the background.
 #
-#   sudo nohup ./validate.sh > /dev/null 2>&1 &
+#   sudo -v                                  # prompt now, in the foreground
+#   sudo -n nohup ./validate.sh > /dev/null 2>&1 &
 #   tail -f validation-*.log
+#
+# A backgrounded sudo cannot prompt on /dev/tty, hence -v then -n. Nothing in
+# the scripts calls sudo, so the cached credential is only needed at launch.
+# Equivalent in a multiplexer: sudo tmux new -d -s validate ./validate.sh
 #
 # No `set -e`: a failing pass must not stop the later ones. Each pass records
 # its own exit code and the digest reports all three.

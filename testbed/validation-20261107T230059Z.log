@@ -1,0 +1,56 @@
+=== validation 2026-11-07T23:00:59Z ===
+
+== 0. containers ==
+ Container swarm-agent-alpha Running 
+ Container swarm-agent-beta Running 
+ Container swarm-agent-gamma Running 
+swarm-agent-gamma Up 9 hours
+swarm-agent-alpha Up 9 hours
+swarm-agent-beta Up 9 hours
+
+== 1. scripted (4 repeats per scenario) + live (3 per mode) ==
+mkdir: cannot create directory ‘/home/mikey/Documents/swarm-adr/testbed/results/20261107T230106Z’: Permission denied
+  bench exited 1 after 0s
+
+== 2. co-located identity ==
+== 1. create child cgroups ==
+  created /sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-a
+  created /sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-b
+./colocated_test.sh: line 28: /tmp/agents.txt: Permission denied
+
+== 3. sensor cost ==
+== workload, sensor off ==
+  0.962
+  0.946
+  0.938
+  0.956
+  0.938
+== sensor on ==
+  1.095
+  0.941
+  0.941
+  0.945
+  0.939
+./overhead_test.sh: line 41: /tmp/oh-events.jsonl: No such file or directory
+
+workload median   off=0.946s  on=0.941s  slowdown=-0.53%
+sensor CPU        0.00s over 0.00s wall = 0% of one core
+events captured   0
+
+=== digest 2026-11-07T23:01:19Z ===
+bench=1 colocated=1 overhead=0
+
+-- scripted totals --
+
+-- live --
+
+-- colocated --
+
+-- overhead --
+workload median   off=0.946s  on=0.941s  slowdown=-0.53%
+sensor CPU        0.00s over 0.00s wall = 0% of one core
+events captured   0
+
+full log: /home/mikey/Documents/swarm-adr/testbed/validation-20261107T230059Z.log
+
+digest written to /home/mikey/Documents/swarm-adr/testbed/validation-digest.txt
