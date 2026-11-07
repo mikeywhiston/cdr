@@ -6,6 +6,8 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 BIN="$(cd "$HERE/../ebpf-agent" && pwd)/target/release/ebpf-agent"
+# CPU cost is only meaningful for an optimised build.
+[ -x "$BIN" ] || { echo "build first: (cd ebpf-agent && cargo build --release)"; exit 1; }
 CTR=swarm-agent-alpha
 N=5
 

@@ -9,7 +9,13 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-BIN="$(cd "$HERE/../ebpf-agent" && pwd)/target/debug/ebpf-agent"
+BINDIR="$(cd "$HERE/../ebpf-agent" && pwd)/target"
+if [ -x "$BINDIR/release/ebpf-agent" ]; then
+  BIN="$BINDIR/release/ebpf-agent"
+else
+  BIN="$BINDIR/debug/ebpf-agent"
+  echo "note: release binary missing, using debug (run cargo build --release)" >&2
+fi
 CTR=swarm-agent-alpha
 
 CID=$(docker inspect -f '{{.Id}}' "$CTR")
