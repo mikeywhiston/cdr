@@ -30,7 +30,7 @@ done
 
 (
   sleep 4
-  SENSOR=$(pgrep -n -f 'target/debug/ebpf-agent run' || true)
+  SENSOR=$(pgrep -n -f "$BIN run" || true)
   for c in $AGENTS; do
     prompt=$(cat "$SCEN/$c/prompt.txt")
     docker exec "swarm-agent-$c" sh -c "cd /workspace && omp \"$prompt\"" > "$OUT/$c.omp.log" 2>&1 || true
@@ -40,7 +40,7 @@ done
 ) &
 AGENTS_PID=$!
 
-"$BIN" run --spool "$OUT/events.jsonl" --edges "$OUT/edges.jsonl" \
+timeout 900 "$BIN" run --spool "$OUT/events.jsonl" --edges "$OUT/edges.jsonl" \
   --es "$ES" --index "$INDEX" --dead-letter "$OUT/es-dead.ndjson" 2> "$OUT/stats.log"
 
 wait "$AGENTS_PID" 2>/dev/null || true

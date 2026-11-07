@@ -1,0 +1,5 @@
+{"kind":"scrub","ts_ns":248806238553637,"agent":383723,"dev":29,"ino":2726770,"path":"/shared/hard1"}
+{"kind":"scrub","ts_ns":248806238553637,"agent":383723,"dev":29,"ino":2693466,"path":"/shared"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1970687,"dst_tgid":1970794,"dev":29,"ino":2726770,"dt_ns":1919322750,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1919322750,"ts_ns":248806957431888,"path":"/shared/hard1"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1970687,"dst_tgid":1970794,"dev":29,"ino":2726770,"dt_ns":718878251,"src_nr":87,"dst_nr":257,"fanout":2,"age_ns":1919322750,"ts_ns":248806957431888,"path":"/shared/hard1"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1970687,"dst_tgid":1970794,"dev":29,"ino":2726770,"dt_ns":718779155,"src_nr":86,"dst_nr":257,"fanout":2,"age_ns":1919322750,"ts_ns":248806957431888,"path":"/shared/hard1"}

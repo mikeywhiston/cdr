@@ -1,0 +1,3 @@
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1949182,"dst_tgid":1949294,"dev":29,"ino":2726089,"dt_ns":1923898625,"src_nr":83,"dst_nr":257,"fanout":2,"age_ns":1923898625,"ts_ns":248384677322969,"path":"/shared/cache"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1949182,"dst_tgid":1949294,"dev":29,"ino":2726089,"dt_ns":721857583,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1923898625,"ts_ns":248384677322969,"path":"/shared/cache"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1949182,"dst_tgid":1949294,"dev":29,"ino":2726094,"dt_ns":722274575,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":722274575,"ts_ns":248384677739961,"path":"/shared/cache/a.out"}

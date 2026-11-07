@@ -1,0 +1,5 @@
+{"kind":"scrub","ts_ns":248722921347393,"agent":383723,"dev":29,"ino":2726668,"path":"/shared/chan.fifo"}
+{"kind":"scrub","ts_ns":248722921347393,"agent":383723,"dev":29,"ino":2693466,"path":"/shared"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1966731,"dst_tgid":1966840,"dev":29,"ino":2726668,"dt_ns":1506521374,"src_nr":87,"dst_nr":257,"fanout":2,"age_ns":1506521374,"ts_ns":248724427868767,"path":"/shared/chan.fifo"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1966731,"dst_tgid":1966840,"dev":29,"ino":2726668,"dt_ns":1506495385,"src_nr":259,"dst_nr":257,"fanout":2,"age_ns":1506521374,"ts_ns":248724427868767,"path":"/shared/chan.fifo"}
+{"kind":"edge","src":383723,"dst":383909,"src_tgid":1966731,"dst_tgid":1966840,"dev":29,"ino":2726668,"dt_ns":1006332620,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1506521374,"ts_ns":248724427868767,"path":"/shared/chan.fifo"}
