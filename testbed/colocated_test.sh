@@ -8,6 +8,8 @@
 #   sudo ./colocated_test.sh
 set -euo pipefail
 
+[ "$(id -u)" = "0" ] || { echo "$(basename "$0") must run as root (needs cgroup and eBPF access)" >&2; exit 2; }
+
 HERE="$(cd "$(dirname "$0")" && pwd)"
 BINDIR="$(cd "$HERE/../ebpf-agent" && pwd)/target"
 if [ -x "$BINDIR/release/ebpf-agent" ]; then
@@ -25,7 +27,8 @@ B="$CG/agent-b"
 
 echo "== 1. create child cgroups =="
 mkdir -p "$A" "$B" && echo "  created $A" && echo "  created $B"
-printf '%s\n%s\n' "$A" "$B" > /tmp/agents.txt
+TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+printf '%s\n%s\n' "$A" "$B" > "$TMP/agents.txt"
 
 echo "== 2. payloads =="
 docker exec -i "$CTR" sh -c 'mkdir -p /tmp/payload; cat > /tmp/payload/w.py' <<'PYW'
@@ -41,8 +44,8 @@ PYR
 docker exec "$CTR" rm -f /shared/colocated
 
 echo "== 3. sensor with declared agents =="
-"$BIN" run --spool /tmp/co-events.jsonl --edges /tmp/co-edges.jsonl \
-  --agent-cgroups /tmp/agents.txt 2> /tmp/co-stats.log &
+"$BIN" run --spool "$TMP/co-events.jsonl" --edges "$TMP/co-edges.jsonl" \
+  --agent-cgroups "$TMP/agents.txt" 2> "$TMP/co-stats.log" &
 SENSOR=$!
 sleep 2.5
 
@@ -63,13 +66,13 @@ kill -INT "$SENSOR" 2>/dev/null || true
 wait "$SENSOR" 2>/dev/null || true
 
 echo "== 5. identities the sensor registered =="
-grep "agent ino=" /tmp/co-stats.log | sed 's/^/  /' || echo "  none"
+grep "agent ino=" "$TMP/co-stats.log" | sed 's/^/  /' || echo "  none"
 
 echo "== 6. replay and show edges =="
-"$BIN" replay /tmp/co-events.jsonl --edges /tmp/co-edges.jsonl >/dev/null 2>&1 || true
-EDGES=$(grep -c '"kind":"edge"' /tmp/co-edges.jsonl 2>/dev/null || true); EDGES=${EDGES:-0}
+"$BIN" replay "$TMP/co-events.jsonl" --edges "$TMP/co-edges.jsonl" >/dev/null 2>&1 || true
+EDGES=$(grep -c '"kind":"edge"' "$TMP/co-edges.jsonl" 2>/dev/null || true); EDGES=${EDGES:-0}
 echo "  edges: $EDGES"
-grep '"kind":"edge"' /tmp/co-edges.jsonl 2>/dev/null | sed 's/^/  /' || true
+grep '"kind":"edge"' "$TMP/co-edges.jsonl" 2>/dev/null | sed 's/^/  /' || true
 
 echo
 if [ "$EDGES" -gt 0 ]; then

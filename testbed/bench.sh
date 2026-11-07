@@ -8,6 +8,8 @@
 # Results append to testbed/results/<run>/results.jsonl.
 set -euo pipefail
 
+[ "$(id -u)" = "0" ] || { echo "$(basename "$0") must run as root (needs cgroup and eBPF access)" >&2; exit 2; }
+
 HERE="$(cd "$(dirname "$0")" && pwd)"
 BINDIR="$(cd "$HERE/../ebpf-agent" && pwd)/target"
 if [ -x "$BINDIR/release/ebpf-agent" ]; then

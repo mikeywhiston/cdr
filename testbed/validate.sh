@@ -14,6 +14,8 @@
 # its own exit code and the digest reports all three.
 set -uo pipefail
 
+[ "$(id -u)" = "0" ] || { echo "$(basename "$0") must run as root (needs cgroup and eBPF access)" >&2; exit 2; }
+
 HERE="$(cd "$(dirname "$0")" && pwd)"
 cd "$HERE"
 # endpoints and the API key for compose; .env is gitignored

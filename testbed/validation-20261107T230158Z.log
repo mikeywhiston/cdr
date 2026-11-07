@@ -1,0 +1,23 @@
+=== validation 2026-11-07T23:01:58Z ===
+
+== 0. containers ==
+ Container swarm-agent-beta Running 
+ Container swarm-agent-gamma Running 
+ Container swarm-agent-alpha Running 
+swarm-agent-gamma Up 9 hours
+swarm-agent-alpha Up 9 hours
+swarm-agent-beta Up 9 hours
+
+== 1. scripted (4 repeats per scenario) + live (3 per mode) ==
+== append-log #1 ==
+== append-log #2 ==
+== append-log #3 ==
+== append-log #4 ==
+== benign-alternating #1 ==
+== benign-alternating #2 ==
+== benign-alternating #3 ==
+== benign-alternating #4 ==
+== benign-concurrent-writes #1 ==
+== benign-concurrent-writes #2 ==
+== benign-concurrent-writes #3 ==
+== benign-concurrent-writes #4 ==

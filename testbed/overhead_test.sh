@@ -4,6 +4,8 @@
 #   sudo ./overhead_test.sh
 set -euo pipefail
 
+[ "$(id -u)" = "0" ] || { echo "$(basename "$0") must run as root (needs cgroup and eBPF access)" >&2; exit 2; }
+
 HERE="$(cd "$(dirname "$0")" && pwd)"
 BIN="$(cd "$HERE/../ebpf-agent" && pwd)/target/release/ebpf-agent"
 # CPU cost is only meaningful for an optimised build.
@@ -24,9 +26,13 @@ OFF=()
 for i in $(seq $N); do v=$(docker exec "$CTR" python3 -c "$WORK"); OFF+=("$v"); echo "  $v"; done
 
 echo "== sensor on =="
-"$BIN" run --spool /tmp/oh-events.jsonl --edges /tmp/oh-edges.jsonl > /tmp/oh.log 2>&1 &
+TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+"$BIN" run --spool "$TMP/events.jsonl" --edges "$TMP/edges.jsonl" > "$TMP/sensor.log" 2>&1 &
 SENSOR=$!
 sleep 3
+if ! kill -0 "$SENSOR" 2>/dev/null; then
+  echo "sensor failed to start:"; tail -3 "$TMP/sensor.log"; exit 1
+fi
 
 cpu_s() { awk '{print $14+$15}' /proc/$1/stat 2>/dev/null || echo 0; }
 C0=$(cpu_s $SENSOR)
@@ -38,7 +44,7 @@ kill -INT $SENSOR 2>/dev/null || true; wait $SENSOR 2>/dev/null || true
 T1=$(date +%s%N)
 
 MOFF=$(med "${OFF[@]}"); MON=$(med "${ON[@]}")
-EVENTS=$(wc -l < /tmp/oh-events.jsonl 2>/dev/null || echo 0)
+EVENTS=$(wc -l < "$TMP/events.jsonl" 2>/dev/null || echo 0)
 SENS_CPU=$(awk -v a="$C0" -v b="$C1" 'BEGIN{d=(b-a)/100; printf "%.2f", d}')
 ELAPSED=$(awk -v a="$T0" -v b="$T1" 'BEGIN{printf "%.2f", (b-a)/1e9}')
 PCT=$(awk -v a="$MOFF" -v b="$MON" 'BEGIN{printf "%.2f", (b-a)/a*100}')
