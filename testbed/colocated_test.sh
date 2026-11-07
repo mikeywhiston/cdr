@@ -67,7 +67,7 @@ grep '"kind":"edge"' /tmp/co-edges.jsonl 2>/dev/null | sed 's/^/  /' || true
 
 echo
 if [ "$EDGES" -gt 0 ]; then
-  echo "VERDICT: co-location detected — the two child cgroups formed an edge."
+  echo "VERDICT: co-location detected: the two child cgroups formed an edge."
 else
   echo "VERDICT: no edge. Check that both pids moved (step 4) and that the sensor"
   echo "         registered four or more agent inodes (step 5)."
