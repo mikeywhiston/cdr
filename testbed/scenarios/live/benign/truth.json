@@ -1,0 +1,9 @@
+{
+ "name": "benign",
+ "scope": "live",
+ "channel": "benign",
+ "benign": true,
+ "policy": "cooperative",
+ "expect_groups": [],
+ "expect": "independent work, no shared object"
+}

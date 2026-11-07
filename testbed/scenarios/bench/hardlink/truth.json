@@ -1,0 +1,13 @@
+{
+ "name": "hardlink",
+ "scope": "in",
+ "channel": "hardlink",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/hard2",
+   "/shared/hard1"
+  ]
+ ]
+}

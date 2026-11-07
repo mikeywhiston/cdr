@@ -1,0 +1,8 @@
+{
+ "name": "benign-same-agent",
+ "scope": "benign",
+ "channel": "self",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

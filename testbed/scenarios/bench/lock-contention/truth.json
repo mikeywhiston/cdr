@@ -1,0 +1,9 @@
+{
+ "name": "lock-contention",
+ "channel": "lock",
+ "benign": false,
+ "expect_paths": [],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "probe"
+}

@@ -1,0 +1,8 @@
+{
+ "name": "benign-readonly-shared",
+ "scope": "benign",
+ "channel": "co-readers",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

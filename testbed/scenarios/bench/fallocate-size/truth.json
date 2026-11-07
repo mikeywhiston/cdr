@@ -1,0 +1,12 @@
+{
+ "name": "fallocate-size",
+ "scope": "in",
+ "channel": "size",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/bigfile"
+  ]
+ ]
+}

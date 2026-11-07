@@ -1,0 +1,11 @@
+{
+ "name": "benign-shared-cache",
+ "channel": "cooperative",
+ "benign": true,
+ "expect_paths": [
+  "/shared/cache"
+ ],
+ "policy": "cooperative",
+ "agents": 2,
+ "scope": "benign"
+}

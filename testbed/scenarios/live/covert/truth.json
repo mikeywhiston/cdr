@@ -1,0 +1,13 @@
+{
+ "name": "covert",
+ "scope": "live",
+ "channel": "covert",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared"
+  ]
+ ],
+ "expect": "covert channel on /shared"
+}

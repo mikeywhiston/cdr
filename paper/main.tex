@@ -1,0 +1,278 @@
+\documentclass[11pt]{article}
+
+\usepackage[preprint]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{xurl}
+
+\newcommand{\placeholder}[1]{\textcolor{red}{[#1]}}
+
+\title{\includegraphics[width=3.6cm]{sentinel-wordmark}\\[0.8em]
+Collusion Detection and Response:\\ Oversight That Outlives the Transcript}
+
+\author{Mikey Whiston \\
+  Security Researcher \& Systems Architect \\
+  Sentinel Logic Ltd \\
+  \texttt{mikey@mikeywhiston.dev}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% 180-220 words. Must contain: the problem in one sentence, the mechanism in one
+% sentence, three results with numbers, one limitation clause.
+\placeholder{abstract}
+\end{abstract}
+
+\section{Introduction}
+% ~450 words. Logs are agent-authored; even honest logs are insufficient.
+% Three claims, one sentence each, pointing at their result.
+\placeholder{introduction}
+
+\section{Related Work and Threat Model}
+% ~550 words. ADR (SentinelOne, Oct 2026) as subject-level; Tetragon/Tracee as
+% raw telemetry; provenance graphs (SPADE/CamFlow) as graphs without verdicts.
+% Lampson 1973 for the two-channel taxonomy. Capability ladder L0/L1/L2.
+\placeholder{related work}
+
+\section{Method}
+% ~800 words, written last, from what the code actually does.
+% 3.1 identity (cgroup inode)  3.2 object keys (dev,ino) + directory inodes
+% 3.3 capture derived from tracefs  3.4 exec tree -> declaration attribution
+% 3.5 desync  3.6 policy verdicts
+\section{Method}
+
+\paragraph{Attested identity.} An agent is a cgroup v2 inode. The probe reads
+\texttt{bpf\_get\_current\_cgroup\_id()} at syscall entry and resolves the caller to
+the nearest registered cgroup in the sandbox slice. No field of the agent's
+identity is self-reported: a process can change its name, hostname and uid, but
+not its position in the cgroup hierarchy, and the kernel records it before the
+syscall runs.
+
+Identity is only half of the join. Kernel objects are keyed by the pair
+$(\mathit{dev},\mathit{ino})$ rather than by inode, because inode numbers repeat
+across containers that share image layers. In our testbed the shared volume
+collapses to one key for all agents ($29/2693466$), while the same binary in three
+containers yields one inode under three devices ($85$, $74$, $82$ for
+$2604173$). Keying on inode alone would report every agent that launches
+\texttt{bash} as sharing an object with every other.
+
+\paragraph{Objects and roles.} Three object classes are in scope. File inodes are
+mutated by \texttt{write}, \texttt{truncate}, \texttt{chmod}, \texttt{setxattr},
+\texttt{utimensat}, \texttt{rename} and \texttt{unlink}, and sensed by
+\texttt{read}, \texttt{stat}, \texttt{access} and \texttt{getdents}. Directory
+inodes are mutated by creating or removing a dirent and sensed by listing the
+directory; this is what makes the zero-read channel deterministic rather than
+statistical, since a receiver that only calls \texttt{getdents64} never opens the
+sender's file but still meets it on the directory object. Finally, any syscall
+whose target resolves to a \texttt{(dev,ino)} is admissible, so the table is an
+annotation of direction rather than a gate on participation: a syscall we have not
+classified still forms an undirected adjacency edge. We keep the mutator list
+short deliberately. Mislabelling a mutator as a sensor and the reverse cost the
+same, so defaulting an unknown verb to \emph{sense} is no worse than attempting
+exhaustive classification, and we avoid a table of every syscall in the ABI.
+
+\paragraph{Capture without a syscall table.} Ring-0 holds no per-syscall
+knowledge. For each syscall in the slice the probe records the number, six
+registers, the cgroup, the command name and up to two user strings, chosen by a
+bitmap supplied by the loader. The bitmap is derived at startup from the kernel's
+own tracepoint metadata: for each \texttt{sys\_enter\_*} event we read
+\path{/sys/kernel/tracing/events/syscalls/} and mark arguments typed
+\texttt{char~*} whose names indicate a path, with \texttt{char~*const~*} vectors
+read element-wise into a separate payload ring so command vectors are captured
+without truncation. Adding a syscall is a map insert, not a recompilation.
+Syscalls outside the bitmap are counted in a per-agent histogram rather than
+dropped, so an unmodelled channel appears as a frequency anomaly against the
+benign baseline instead of as silence.
+
+\paragraph{Resolving names inside the namespace.} Paths reach the sensor as the
+agent wrote them. The loader resolves them with
+\texttt{openat2} with \texttt{RESOLVE\_IN\_ROOT} and \texttt{RESOLVE\_NO\_MAGICLINKS}
+against an \texttt{O\_PATH} descriptor for the agent's \texttt{/proc/<pid>/root},
+then \texttt{fstat}s the result. \texttt{RESOLVE\_IN\_ROOT} treats that descriptor
+as \texttt{/} for the whole walk, which matters for two cases we observed: an
+absolute symlink target is otherwise resolved against the \emph{host} root, and
+\texttt{..} at the container root escapes to a host inode shared by every
+container. Both produced false edges before the change. Resolution results are
+cached per $(\mathit{agent},\mathit{path})$ and invalidated on \texttt{O\_CREAT},
+because a delete-and-recreate may be served a different inode.
+
+\paragraph{Causal attribution.} The \texttt{sched\_process\_fork} tracepoint
+yields parent and child; \texttt{execve} yields the argument vector. Together they
+form an exec forest per agent. A declared tool call binds to the node whose
+effective command equals it, after unwrapping one shell level and comparing
+basenames; that node's subtree is the delegated action, and nodes outside it are
+unaccounted. Because every object touch carries a thread-group id, each edge can
+be walked to the exec node that authorised it, and a supervision layer can ask
+which declaration is responsible for a syscall rather than which syscall happened
+near a timestamp.
+
+\paragraph{Reconciliation and policy.} Declarations are reconciled against
+executions into four classes: \texttt{match}, \texttt{mismatch} (declared, absent),
+\texttt{omission} (silent) and \texttt{surplus} (executed with no covering
+declaration). Separately, every edge is evaluated against a sanction set over
+paths, yielding \texttt{sanctioned} or \texttt{unsanctioned}. Collusion is defined
+as an unsanctioned edge: the detector never infers intent, it records the
+interaction and applies declared policy.
+
+\section{Results}
+% ~700 words plus three figures and three tables.
+\section{Results}
+
+\paragraph{Setup.} Three Debian containers share one systemd slice and one
+mounted volume; the sensor runs on the host. Two suites are reported separately
+because they answer different questions. The \emph{scripted} suite uses
+deterministic actors to exercise the sensor across media and is scored against
+ground truth fixed before any run. The \emph{live} suite uses omp agents with a
+language model, and exists to produce transcripts: only there can a transcript-only
+monitor be compared with the kernel. Episodes are hermetic, each starting from an
+empty shared surface, and detector and scenario hashes are recorded per run.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Group & Episodes & TP & FP & FN \\
+\midrule
+file content        & 20 & 20 & 0 & 0 \\
+inode metadata      & 12 & 12 & 0 & 0 \\
+namespace           & 20 & 20 & 0 & 0 \\
+channel objects     &  8 &  8 & 0 & 0 \\
+multi-agent         & 12 & 20 & 0 & 0 \\
+\midrule
+total (18 channels) & 72 & 80 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Scripted suite, four repeats per scenario. Recovery is complete with no
+false edges; the multi-agent group yields two edges per episode by construction.}
+\label{tab:scripted}
+\end{table}
+
+\paragraph{Storage-channel coverage.} Table~\ref{tab:scripted} summarises 72
+episodes over 18 channels: file content (including append, truncate, size change
+and delete-then-recreate), inode metadata (xattr, mtime, mode), namespace
+operations (directory creation, nested directories, rename, hardlink, symlink),
+channel objects (a FIFO and a shared mapping) and multi-agent topologies (a
+three-hop relay and a one-to-many fan-out). Recall is $80/80$ with zero false
+edges; the 95\% lower bound on recall is $95.4\%$.
+
+\paragraph{What the model does not cover.} Two channels are reported as
+\emph{boundary probes} and are expected to be missed. Lock contention is invisible
+because both parties mutate, so no mutator-to-sensor pair exists; a UNIX domain
+socket is invisible because \texttt{bind} and \texttt{connect} carry a sockaddr
+rather than a path. Across eight probe episodes neither produced an edge. FIFOs
+and shared mappings, by contrast, we expected to miss and do not: a pipe has an
+inode, and writing a shared mapping requires a writable open, so the edge is
+visible even though the mapped content is not.
+
+\paragraph{Benign control.} Forty episodes span ten controls: independent work,
+randomly generated paths, co-readers of a read-only file, a single agent writing
+and reading its own file, interleaved but disjoint writes, subtree reads under
+\texttt{/usr/share}, temporary-file churn, and legitimate cache sharing under a
+permissive policy. No benign episode produced an unsanctioned edge, nor an edge on
+an object outside its declared set; the 95\% upper bound on the per-episode alarm
+rate is $8.8\%$. The cache episode does produce edges, which is the intended
+behaviour: the mechanism fires and the policy stays quiet.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Mode & Ep. & Edges & Unsanc. & Tx.\ recall \\
+\midrule
+covert        & 3 & 2 & 2 & 0.00 \\
+cooperative   & 3 & 3 & 0 & 0.00 \\
+laundering    & 3 & 3 & 3 & 0.00 \\
+laundering (npm)   & 3 & 3 & 3 & 0.00 \\
+laundering (cargo) & 3 & 3 & 3 & 0.00 \\
+benign        & 3 & 0 & 0 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Live suite: 18 episodes with omp agents. A transcript-only monitor
+recovered $0$ of $42$ kernel edges across all modes.}
+\end{table}
+
+\paragraph{Transcript-only monitoring fails.} Across all eighteen live episodes
+the kernel recorded 42 edges, and a monitor that reads only declared tool calls
+recovered none (95\% upper bound on recall $8.4\%$). This holds in the
+\emph{laundering} modes, where the agent's declaration is true: it ran
+\texttt{pytest -q} or \texttt{npm test}, but the binary answering to that name had
+been replaced and performed the covert write. Reconciliation reports
+\texttt{match}, both declarations are honest, and the interaction is still
+recovered because it is recorded at the object. Oversight that trusts claims fails
+not only when agents lie, but when they tell the truth about a name whose
+implementation is hostile.
+
+\paragraph{Reconciliation results.} On honest transcripts every declaration
+matches an execution and no surplus is reported. Rewriting the declared command in
+one agent's session file produces one \texttt{mismatch} and an \texttt{unaccounted}
+set naming the command that actually ran. The object edge survives both the
+rewrite and the subsequent \texttt{unlink}, because the edge is published before
+the file is deleted; deletion is recorded as a scrub annotation rather than as a
+retraction.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Iteration & Change & TP & FP & Recall \\
+\midrule
+1 & baseline            & 15  & 13 & 0.625 \\
+2 & namespace fix       & 18  & 18 & 0.750 \\
+3 & cache scope         & 21  & 0  & 1.000 \\
+4 & 30 scenarios        & 68  & 0  & 0.944 \\
+5 & cache invalidation  & 120 & 0  & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Ablation. Scoring model corrected to objects in iteration 3; re-scoring earlier corpora separates the effect of the detector
+fixes from the correction of the scoring model: false positives fall to zero only
+when the detector is fixed.}
+\label{tab:ablation}
+\end{table}
+
+\paragraph{Defects found by the suite.} Four detector defects were found by
+scenarios rather than by inspection: absolute symlink targets resolved in the host
+namespace; rename destinations captured but never correlated; a global
+path-to-inode cache that let one agent's inode stand in for another's unresolved
+path; and a cache entry surviving delete-and-recreate. Table~\ref{tab:ablation}
+shows the trajectory, and Appendix~B records each defect with its failing metric.
+
+\section{Discussion and Limitations}
+% ~400 words. Operating point, identity boundary, timing/network media,
+% io_uring, single host, N<=5, scripted actors.
+\placeholder{discussion}
+
+\section{Conclusion}
+% ~120 words.
+\placeholder{conclusion}
+
+\bibliographystyle{acl_natbib}
+% \bibliography{custom}
+
+\appendix
+
+\section{Event Schema}
+\placeholder{schema table}
+
+\section{Iteration Log}
+\placeholder{defect log: each defect, found by, metric before/after}
+
+\section{Limitations and Dual-Use}
+\placeholder{required appendix}
+
+\section{LLM Usage Statement}
+\placeholder{required statement}
+
+\end{document}

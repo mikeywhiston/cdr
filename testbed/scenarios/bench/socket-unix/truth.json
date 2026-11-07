@@ -1,0 +1,9 @@
+{
+ "name": "socket-unix",
+ "scope": "probe",
+ "channel": "unix-socket",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [],
+ "definition_note": "AF_UNIX socket creation/connect is not an object access we map"
+}

@@ -1,0 +1,12 @@
+{
+ "name": "truncate",
+ "scope": "in",
+ "channel": "truncate",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/truncfile"
+  ]
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "dir-count",
+ "channel": "directory",
+ "benign": false,
+ "expect_paths": [
+  "/shared/dirchan"
+ ],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in"
+}

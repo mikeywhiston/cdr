@@ -1,0 +1,13 @@
+{
+ "name": "launder-cargo",
+ "scope": "live",
+ "channel": "launder",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared"
+  ]
+ ],
+ "expect": "truthful cargo declaration, covert effect"
+}

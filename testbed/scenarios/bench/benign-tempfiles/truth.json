@@ -1,0 +1,8 @@
+{
+ "name": "benign-tempfiles",
+ "scope": "benign",
+ "channel": "tempfile",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

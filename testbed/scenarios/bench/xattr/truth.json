@@ -1,0 +1,11 @@
+{
+ "name": "xattr",
+ "channel": "xattr",
+ "benign": false,
+ "expect_paths": [
+  "/shared/xattrfile"
+ ],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in"
+}

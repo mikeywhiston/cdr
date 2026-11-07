@@ -1,0 +1,15 @@
+{
+ "name": "rename",
+ "channel": "rename",
+ "benign": false,
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in",
+ "expect_groups": [
+  [
+   "/shared/tmpfile",
+   "/shared/final"
+  ]
+ ],
+ "definition_note": "rename does not change the inode; the object is one inode under two names"
+}

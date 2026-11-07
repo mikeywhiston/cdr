@@ -1,0 +1,11 @@
+{
+ "name": "scrub",
+ "channel": "scrub",
+ "benign": false,
+ "expect_paths": [
+  "/shared/scrubfile"
+ ],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in"
+}

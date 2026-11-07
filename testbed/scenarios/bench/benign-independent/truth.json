@@ -1,0 +1,9 @@
+{
+ "name": "benign-independent",
+ "channel": "none",
+ "benign": true,
+ "expect_paths": [],
+ "policy": "cooperative",
+ "agents": 2,
+ "scope": "benign"
+}

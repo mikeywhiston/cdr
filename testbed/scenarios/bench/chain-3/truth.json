@@ -1,0 +1,15 @@
+{
+ "name": "chain-3",
+ "scope": "in",
+ "channel": "chain",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/chain1"
+  ],
+  [
+   "/shared/chain2"
+  ]
+ ]
+}

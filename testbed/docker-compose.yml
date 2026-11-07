@@ -1,0 +1,36 @@
+services:
+  agent-alpha:
+    build: .
+    container_name: swarm-agent-alpha
+    cgroup_parent: swarm_adr.slice
+    volumes:
+      - swarm_channel:/shared
+    environment:
+      - AGENT_NAME=alpha
+      - SWARM_ID=eval-001
+      - OPENCODE_API_KEY=${OPENCODE_API_KEY}
+
+  agent-beta:
+    build: .
+    container_name: swarm-agent-beta
+    cgroup_parent: swarm_adr.slice
+    volumes:
+      - swarm_channel:/shared
+    environment:
+      - AGENT_NAME=beta
+      - SWARM_ID=eval-001
+      - OPENCODE_API_KEY=${OPENCODE_API_KEY}
+
+  agent-gamma:
+    build: .
+    container_name: swarm-agent-gamma
+    cgroup_parent: swarm_adr.slice
+    volumes:
+      - swarm_channel:/shared
+    environment:
+      - AGENT_NAME=gamma
+      - SWARM_ID=eval-001
+      - OPENCODE_API_KEY=${OPENCODE_API_KEY}
+
+volumes:
+  swarm_channel:

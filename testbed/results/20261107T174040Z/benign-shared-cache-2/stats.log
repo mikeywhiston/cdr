@@ -1,0 +1,9 @@
+[INFO  ebpf_agent] fork tracepoint on, parent_off=12 child_off=20
+[INFO  ebpf_agent] resolved 3 container namespace roots
+[INFO  ebpf_agent] agent ino=383909 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-31b13adc1be024ec6215581bc5713c606444f97b946432a69d366f5fde2aaf2f.scope
+[INFO  ebpf_agent] agent ino=383723 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope
+[INFO  ebpf_agent] agent ino=383816 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-32b09e4de437e42f881b7cc54d52b4e64fb1ae7d6ee75e8e291f84098d932232.scope
+[INFO  ebpf_agent] binary_built_unix=1794071976
+[INFO  ebpf_agent] streaming -> /home/mikey/Documents/swarm-adr/testbed/results/20261107T174040Z/benign-shared-cache-2/events.jsonl / /home/mikey/Documents/swarm-adr/testbed/results/20261107T174040Z/benign-shared-cache-2/edges.jsonl; Ctrl-C to stop
+Exiting... events_ok, drops=0, payload_drops=0, oos=529290, syscalls=8573
+[INFO  ebpf_agent] nr_hist_top10=rt_sigaction(13:1170) nanosleep(35:901) newfstatat(262:578) close(3:548) prctl(157:508) futex(202:447) mmap(9:425) read(0:363) openat(257:312) statx(332:306)

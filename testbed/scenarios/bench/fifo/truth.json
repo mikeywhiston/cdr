@@ -1,0 +1,13 @@
+{
+ "name": "fifo",
+ "scope": "in",
+ "channel": "fifo",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/chan.fifo"
+  ]
+ ],
+ "definition_note": "a named pipe has an inode; open/write/read on it are ordinary object accesses"
+}

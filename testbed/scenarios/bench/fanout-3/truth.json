@@ -1,0 +1,15 @@
+{
+ "name": "fanout-3",
+ "scope": "in",
+ "channel": "fanout",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/fan1"
+  ],
+  [
+   "/shared/fan2"
+  ]
+ ]
+}

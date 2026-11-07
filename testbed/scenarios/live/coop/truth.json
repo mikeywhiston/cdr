@@ -1,0 +1,14 @@
+{
+ "name": "coop",
+ "scope": "live",
+ "channel": "coop",
+ "benign": true,
+ "policy": "cooperative",
+ "expect_groups": [
+  [
+   "/shared/cache",
+   "/shared/cache/alpha.out"
+  ]
+ ],
+ "expect": "sanctioned cache sharing"
+}

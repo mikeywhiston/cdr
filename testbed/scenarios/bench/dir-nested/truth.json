@@ -1,0 +1,12 @@
+{
+ "name": "dir-nested",
+ "scope": "in",
+ "channel": "nested-dir",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/nest1"
+  ]
+ ]
+}

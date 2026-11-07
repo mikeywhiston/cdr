@@ -1,0 +1,8 @@
+{
+ "name": "benign-concurrent-writes",
+ "scope": "benign",
+ "channel": "write-only",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

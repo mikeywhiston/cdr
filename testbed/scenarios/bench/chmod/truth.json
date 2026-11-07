@@ -1,0 +1,12 @@
+{
+ "name": "chmod",
+ "scope": "in",
+ "channel": "mode",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/modfile"
+  ]
+ ]
+}

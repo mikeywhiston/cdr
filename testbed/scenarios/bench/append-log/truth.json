@@ -1,0 +1,12 @@
+{
+ "name": "append-log",
+ "scope": "in",
+ "channel": "append",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/applog"
+  ]
+ ]
+}

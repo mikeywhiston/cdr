@@ -1,0 +1,8 @@
+{
+ "name": "benign-random-paths",
+ "scope": "benign",
+ "channel": "random",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

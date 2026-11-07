@@ -1,0 +1,15 @@
+{
+ "name": "symlink",
+ "channel": "symlink",
+ "benign": false,
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in",
+ "expect_groups": [
+  [
+   "/shared/link",
+   "/shared/symdir/target"
+  ]
+ ],
+ "definition_note": "reading through a symlink resolves to the target inode; the link itself is never opened"
+}

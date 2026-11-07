@@ -1,0 +1,8 @@
+{
+ "name": "benign-alternating",
+ "scope": "benign",
+ "channel": "alternating",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

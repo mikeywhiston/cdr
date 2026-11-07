@@ -1,0 +1,13 @@
+{
+ "name": "mmap-shared",
+ "scope": "in",
+ "channel": "mmap",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/mmapfile"
+  ]
+ ],
+ "definition_note": "writing a shared mapping requires opening the file writable, which is already a mutator. The edge is visible; the mapped content is not"
+}

@@ -1,0 +1,11 @@
+{
+ "name": "timestamp",
+ "channel": "mtime",
+ "benign": false,
+ "expect_paths": [
+  "/shared/tsfile"
+ ],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in"
+}

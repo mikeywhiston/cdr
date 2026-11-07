@@ -1,0 +1,8 @@
+{
+ "name": "benign-subtree-reads",
+ "scope": "benign",
+ "channel": "system-reads",
+ "benign": true,
+ "policy": "covert",
+ "expect_groups": []
+}

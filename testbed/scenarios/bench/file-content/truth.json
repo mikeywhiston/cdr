@@ -1,0 +1,11 @@
+{
+ "name": "file-content",
+ "channel": "file",
+ "benign": false,
+ "expect_paths": [
+  "/shared/chan-file"
+ ],
+ "policy": "covert",
+ "agents": 2,
+ "scope": "in"
+}
