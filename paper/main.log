@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.21)  8 NOV 2026 05:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.21)  8 NOV 2026 05:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -463,31 +463,31 @@ Package microtype Info: Loading generic protrusion settings for font family
 Overfull \vbox (11.0391pt too high) detected at line 47
  []
 
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 10.95pt on input line 83.
 [1{/home/mikey/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/home/mikey/.TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{/home/mikey/.TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}
 
 
 
  <./sentinel-wordmark.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 116--120
+Underfull \hbox (badness 10000) in paragraph at lines 113--117
 []\T1/ptm/b/n/10.95 (+20) A mea-sure of how much over-sight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--120
+Underfull \hbox (badness 10000) in paragraph at lines 113--117
 \T1/ptm/b/n/10.95 (+20) transcript-only mon-i-tor-ing pro-vides.
  []
 
 <figures/fig1.pdf, id=44, 614.295pt x 794.97pt>
 File: figures/fig1.pdf Graphic file (type pdf)
 <use figures/fig1.pdf>
-Package pdftex.def Info: figures/fig1.pdf  used on input line 134.
+Package pdftex.def Info: figures/fig1.pdf  used on input line 131.
 (pdftex.def)             Requested size: 455.24411pt x 192.36821pt.
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 135.
-LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.95pt on input line 141.
+(Font)              scaled to size 10.0pt on input line 132.
 
-Underfull \hbox (badness 1571) in paragraph at lines 147--148
+Underfull \hbox (badness 1571) in paragraph at lines 144--145
 \T1/ptm/m/n/10.95 (+20) against an \T1/zi4/m/n/10.95 O_PATH \T1/ptm/m/n/10.95 (+20) de-scrip-tor for the agent's
  []
 
@@ -500,15 +500,15 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 9589D75361A3763F1C773BDCC90054B2;637.
  ) 
 Here is how much of TeX's memory you used:
- 14569 strings out of 469040
- 233256 string characters out of 5457101
+ 14571 strings out of 469040
+ 233276 string characters out of 5457101
  700752 words of memory out of 5000000
  43289 multiletter control sequences out of 15000+600000
- 669185 words of font info for 212 fonts, out of 8000000 for 9000
+ 669294 words of font info for 213 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,12n,93p,1305b,584s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,12n,93p,1287b,584s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (3 pages, 157745 bytes).
+Output written on main.pdf (3 pages, 158085 bytes).
 PDF statistics:
  132 PDF objects out of 1000 (max. 8388607)
  98 compressed objects within 1 object stream
