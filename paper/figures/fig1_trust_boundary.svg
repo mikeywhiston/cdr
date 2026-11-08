@@ -83,7 +83,7 @@
   <line x1="1074" y1="302" x2="1088" y2="302" stroke="#1F4E79" stroke-width="1.5" marker-end="url(#ab)"/>
 
   <text x="1162" y="366" text-anchor="middle" font-size="12" font-weight="bold" fill="#1F4E79">edge alpha to beta</text>
-  <text x="1162" y="383" text-anchor="middle" font-size="10" font-family="DejaVu Sans Mono, monospace" fill="#444444">/shared/out.bin</text>
+  <text x="1162" y="383" text-anchor="middle" font-size="10" font-family="DejaVu Sans Mono, monospace" fill="#444444">/shared/cache/alpha.out</text>
   <text x="1162" y="400" text-anchor="middle" font-size="10" fill="#A93226">unsanctioned</text>
 
   <!-- legend -->

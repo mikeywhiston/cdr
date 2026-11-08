@@ -34,16 +34,18 @@ printf '%s\n%s\n' "$A" "$B" > "$TMP/agents.txt"
 
 echo "== 2. payloads =="
 docker exec -i "$CTR" sh -c 'mkdir -p /tmp/payload; cat > /tmp/payload/w.py' <<'PYW'
-import time
-time.sleep(1.2)
+import os, time
+while not os.path.exists("/tmp/go-w"):   # wait for the harness to move us
+    time.sleep(0.02)
 open("/shared/colocated", "w").write("payload")
 PYW
 docker exec -i "$CTR" sh -c 'cat > /tmp/payload/r.py' <<'PYR'
-import time
-time.sleep(1.6)
+import os, time
+while not os.path.exists("/tmp/go-r"):   # wait for the writer to finish
+    time.sleep(0.02)
 open("/shared/colocated").read()
 PYR
-docker exec "$CTR" rm -f /shared/colocated
+docker exec "$CTR" sh -c 'rm -f /shared/colocated /tmp/go-w /tmp/go-r'
 
 echo "== 3. sensor with declared agents =="
 "$BIN" run --spool "$TMP/co-events.jsonl" --edges "$TMP/co-edges.jsonl" \
@@ -52,8 +54,8 @@ SENSOR=$!
 sleep 2.5
 
 echo "== 4. launch both processes, then move each into its cgroup =="
-docker exec -d "$CTR" sh -c 'sleep 0.8; exec python3 /tmp/payload/w.py'
-docker exec -d "$CTR" sh -c 'sleep 0.8; exec python3 /tmp/payload/r.py'
+docker exec -d "$CTR" python3 /tmp/payload/w.py
+docker exec -d "$CTR" python3 /tmp/payload/r.py
 sleep 0.4
 PW=$(pgrep -f 'payload/w\.py' | head -1 || true)
 PR=$(pgrep -f 'payload/r\.py' | head -1 || true)
@@ -63,7 +65,11 @@ if [ -n "${PR:-}" ]; then echo "$PR" > "$B/cgroup.procs" && echo "  moved reader
 echo "  agent-a procs: $(cat "$A/cgroup.procs" 2>/dev/null | tr '\n' ' ')"
 echo "  agent-b procs: $(cat "$B/cgroup.procs" 2>/dev/null | tr '\n' ' ')"
 
-sleep 3.5
+# release the writer only after both pids are in their cgroups
+docker exec "$CTR" touch /tmp/go-w
+sleep 1.2
+docker exec "$CTR" touch /tmp/go-r
+sleep 2.5
 kill -INT "$SENSOR" 2>/dev/null || true
 wait "$SENSOR" 2>/dev/null || true
 
