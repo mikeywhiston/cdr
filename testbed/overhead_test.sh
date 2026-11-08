@@ -19,16 +19,33 @@ BIN="$(cd "$HERE/../ebpf-agent" && pwd)/target/release/ebpf-agent"
 CTR="${CTR:-swarm-agent-alpha}"
 N="${N:-7}"
 
-# The workload prints "cpu_seconds wall_seconds" using process_time, which
-# counts user + system time for the process itself.
-WORK='
+# Two workloads. The CPU-bound one barely touches the filesystem, so it measures
+# the probe's per-syscall floor. The I/O-bound one exercises openat2 plus fstat on
+# every iteration, which is where the resolution path actually spends its time.
+MODE="${MODE:-cpu}"
+case "$MODE" in
+  cpu) WORK='
 import hashlib, time
 d = b"x" * 1000000
 c0, w0 = time.process_time(), time.time()
 for _ in range(1500):
     hashlib.sha256(d).digest()
 print("%.3f %.3f" % (time.process_time() - c0, time.time() - w0))
-'
+' ;;
+  io) WORK='
+import os, time
+p = "/tmp/io_probe.bin"
+with open(p, "wb") as f:
+    f.write(b"x" * 4096)
+c0, w0 = time.process_time(), time.time()
+for _ in range(1500):
+    fd = os.open(p, os.O_RDONLY)
+    os.read(fd, 4096)
+    os.close(fd)
+print("%.3f %.3f" % (time.process_time() - c0, time.time() - w0))
+' ;;
+  *) echo "MODE must be cpu or io" >&2; exit 2 ;;
+esac
 
 med_col() { # $1 = column, rest = samples
   local col=$1; shift
@@ -36,7 +53,7 @@ med_col() { # $1 = column, rest = samples
     awk '{a[NR]=$1} END{print a[int((NR+1)/2)]}'
 }
 
-echo "== workload, sensor off ($N runs) =="
+echo "== workload ($MODE), sensor off ($N runs) =="
 OFF=()
 for i in $(seq "$N"); do
   v=$(docker exec "$CTR" python3 -c "$WORK")
@@ -75,6 +92,7 @@ DCPU=$(awk -v a="$MOFF_C" -v b="$MON_C" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*1
 DWALL=$(awk -v a="$MOFF_W" -v b="$MON_W" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*100; else print "n/a"}')
 
 echo
+echo "mode              $MODE"
 echo "workload CPU      off=${MOFF_C}s  on=${MON_C}s  delta=${DCPU}%   <- the claim"
 echo "workload wall     off=${MOFF_W}s  on=${MON_W}s  delta=${DWALL}%   (load-sensitive, context only)"
 echo "sensor CPU        ${SENS_CPU}s over ${ELAPSED}s wall = ${SCPU}% of one core"
