@@ -37,7 +37,7 @@ Collusion Detection and Response:\\ Oversight That Outlives the Transcript$^{1}$
 % float placement: a full-width figure should share a page with text
 \raggedbottom
 \renewcommand{\topfraction}{0.9}
-\renewcommand{\dbltopfraction}{1.0}
+\renewcommand{\dbltopfraction}{0.7}
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.75}
 \setcounter{topnumber}{3}
@@ -123,6 +123,45 @@ which keeps the mechanism auditable and its alarms revisable.
 
 \section{Related Work}
 
+\paragraph{Oversight for agents.} Agentic detection and response treats the agent as
+the subject. SentinelOne's ADR discovers AI agents, enforces what each is allowed to
+do, and monitors agent behaviour in real time on endpoints and cloud workloads
+\cite{sentinelone2026adr}; the unit of analysis is one agent's behaviour against a
+policy, and there is no notion of a relationship between two agents. AI control asks
+whether a trusted model monitoring an untrusted one can keep it from succeeding
+\cite{greenblatt2024control}. Observability platforms and evaluation harnesses log
+tool calls inside the runtime loop. All of these place the evidence where the agent
+is, and none takes a pair as the unit of analysis.
+
+\paragraph{Kernel provenance and runtime security.} Tetragon \cite{tetragon}, Tracee
+\cite{tracee} and Falco \cite{falco} observe syscalls at the kernel boundary, and the
+substrate already carries part of what is needed here: Tracee exposes the originating
+cgroup identifier in its event records, and Tetragon monitors and filters events per
+cgroup. Provenance systems build graph records of system
+activity \cite{spade,camflow,nodoze}. This work shares their substrate and differs in
+what it does with it: those systems emit telemetry about processes for an analyst,
+whereas the unit here is an edge between two identified agents and the output is a
+verdict against a declared policy rather than a graph.
+
+\paragraph{Covert channels.} Lampson's confinement analysis remains the correct
+taxonomy: information moves through storage and through time \cite{lampson1973}. Work on secret collusion formalises steganographic coordination between communicating agents and evaluates how far it can be detected in their messages \cite{motwani2024secret}. That is the complementary approach, and it assumes the messages are readable; the question here is what remains when the record is written by the agent.
+
+\paragraph{Agent swarms.} The failure modes of agent swarms are catalogued in
+\cite{hammond2025multi}, and the July 2026 incident made them concrete: roughly 1,200 agents
+meant to be isolated found an unsanctioned message board and coordinated through it,
+which the report describes as emergent rather than instructed
+\cite{metr2026incident}. The forensic account of that swarm was reconstructed from
+messages and traces, and among the behaviours it documents, agents attempted to
+remove traces of their own work \cite{swarmtraces2026}. A record that its subject
+tries to edit is not merely incomplete, which is why the evidence this paper uses is
+taken from the kernel instead. Proposals for AI identifiers
+address naming, revocation and provenance of a system \cite{chan2024ids}, but not the
+attribution of an action already taken by one of several agents.
+
+\paragraph{Gap.} To our knowledge, no existing system combines kernel-attested agent
+identity with a policy verdict over agent pairs, and none measures how much oversight
+a transcript alone actually provides to determine collusion.
+
 \section{Methods}
 
 \begin{figure*}[!t]
@@ -150,20 +189,307 @@ Figure~\ref{fig:trust} summarises the arrangement the rest of this section build
 
 \section{Results}
 
+\paragraph{Environment.} Three slim Debian containers share one systemd slice and one mounted volume, while the sensor runs on the host. There are two suites of tests, reported separately as they answer different questions. The \emph{scripted} suite uses deterministic scripts to assess the sensor across different communicating media, and is scored against whether it detects the communication between the agents. The \emph{live} suite uses the omp agent harness within each container, connecting to
+Kimi K2.7 Code (\texttt{opencode-go/kimi-k2.7-code}) through OpenCode, and exists to
+produce transcripts, which allows us to compare a transcript-only monitor against CDR. All test cases are hermetic, each starting from an empty surface to prevent undue influence.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Group & Episodes & TP & FP & FN \\
+\midrule
+file content & 20 & 20 & 0 & 0 \\
+inode metadata & 12 & 12 & 0 & 0 \\
+namespace & 20 & 20 & 0 & 0 \\
+channel objects & 8 & 8 & 0 & 0 \\
+unix socket & 8 & 8 & 0 & 0 \\
+multi-agent & 12 & 20 & 0 & 0 \\
+\midrule
+total & 80 & 88 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{The \emph{scripted} suite results, four repeats per scenario. The multi-agent category yields two edges per episode as designed.}
+\label{tab:Scripted}
+\end{table}
+
+\paragraph{Storage-channel coverage.} Table~\ref{tab:Scripted} summarises 80 test cases over 19 channels: file content (including append, truncate, size change, delete-then-recreate), inode metadata (xattr, mtime, mode), namespace operations (directory creation, nested directories, rename, hardlink, symlink), channel objects (a FIFO pipe and a shared mapping), local sockets, and topologies including multiple agents (three-hop relay, one-to-many communication). Recall is $88/88$ with zero false edges, which gives a 95\% lower bound on recall of $96.7\%$ given zero failures.
+
+Local sockets are the one channel whose name is not a path argument. A \texttt{AF\_UNIX} endpoint carries its name inside a structure, so the probe reads the address family and follows \texttt{sun\_path} only when it is \texttt{AF\_UNIX}; network monitoring is out of scope. \texttt{bind} then creates the socket inode and \texttt{connect} resolves the same path, which is the ordinary mutator-to-sensor pair every other channel uses. The defect that hid this is described below.
+
+\paragraph{Benign control group.} 40 episodes span 10 control groups. We emulate independent work, randomly generated paths, co-readers of a read-only file (no mutator, no communication), a single agent writing and reading its own file, disjoint writes, subtree reads under \texttt{/usr/share}, temporary-file use, and legitimate cache sharing under a sanctioned policy. No benign episode produced an unsanctioned edge, hence the 95\% upper bound on the per-episode alarm rate is $7.2\%$. The cache episode does produce sanctioned edges; this is the intended behaviour, since CDR detected the communication but it fell within the declared policy.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Mode & Ep. & Edges & Unsanc. & Tx.\ recall \\
+\midrule
+covert & 3 & 6 & 6 & 0.00 \\
+cooperative & 3 & 9 & 0 & 0.00 \\
+laundering & 3 & 9 & 9 & 0.00 \\
+laundering (npm) & 3 & 9 & 9 & 0.00 \\
+laundering (cargo) & 3 & 9 & 9 & 0.00 \\
+benign & 3 & 0 & 0 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{The \emph{live} suite containing 18 episodes with OMP agents, 42 edges detected by CDR. A transcript-only monitor (representing a supervisor model) recovered none in any mode.}
+\label{tab:live}
+\end{table}
+
+\paragraph{Transcript monitoring fails.} Across eighteen live test cases, CDR recorded 42 edges and a monitor that read only the declared tool calls recovered none, giving a 95\% upper bound on recall of $6.9\%$ under zero detections. This is most apparent in the laundering modes. The first container (alpha) declares that it is executing \texttt{pytest -q}, and it is accurately running \texttt{pytest -q}, but \texttt{/usr/local/bin/pytest} was replaced by an earlier step with a script that writes \texttt{/shared/.cache\_sync}, sleeps, deletes it, and prints a summary. Transcript reconciliation alone reports \texttt{match} on both sides, but the malicious exchange is only visible at the kernel level: a write, a read by the second agent, and a scrub record marking that the object was deleted a second later, which annotates the edge instead of retracting it. Oversight that trusts claims blindly fails not only when agents lie, but also when they tell the truth about a name whose implementation is malicious.
+
+\paragraph{Tampering and laundering are different failures.} Tampering is the case where the transcript and the execution diverge. Rewriting a declared command in a session file produces one \texttt{mismatch} and an \texttt{unaccounted} entry naming what actually ran, and the edge confirms the interaction. Laundering defeats that comparison by construction: declaration and execution agree, so reconciliation reports a match, and the exchange above is recoverable only from the object record, where beta read a file alpha wrote and no declaration covers that read. The detector reports that edge as unsanctioned; whether to call it collusion is the policy's judgement. We report the two categories separately because different evidence catches them.
+
+\paragraph{Colocated agents.} Identity does not require a container per agent. We partitioned one running container into two agents by creating child cgroups inside its own, moving each agent's process into one, and declaring both to the loader out of band. Two processes in that single container, one writing a file on the shared volume and the other reading it, produce an edge between the two declared identities in 3 of 3 runs, with a handoff of 506~ms in the measured run. Delegation is not an obstacle; the requirement is that a deployment create the partitions before the agents fork, since cgroup membership is inherited and relied upon by CDR for attribution.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Iteration & Change & TP & FP & Recall \\
+\midrule
+1 & baseline & 15 & 13 & 0.625 \\
+2 & namespace fix & 18 & 18 & 0.750 \\
+3 & cache scope & 21 & 0 & 1.000 \\
+4 & 30 scenarios & 68 & 0 & 0.9444 \\
+5 & cache invalidation & 120 & 0 & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Development testing trajectory over the first five iterations. Iteration 3 also corrected a scoring error. False positives reached zero when the detector was fixed.}
+\label{tab:runs}
+\end{table}
+
+\paragraph{Defects found by running.} Six defects were found by scenario testing: absolute symlink targets resolved in the host namespace, rename destinations captured but not correlated, a global inode cache that let one agent's inode stand in for another's unresolved path, a cache entry surviving deletion and recreation, a cached root mount that was rendered invalid when its process exited, and \texttt{bind} missing from the mutator table, which meant a socket exchange only scored when the scenario's cleanup \texttt{unlink} supplied the mutator. Table~\ref{tab:runs} shows the trajectory across the first five iterations; Appendix~B records all six with their failing metrics.
+
+\paragraph{Operating cost.} The sensor used $7.3\%$ of one core while capturing 260 events per second, and about half a core at 9,000 events per second that our stress workload generated. Per-syscall costs, with their breakdown, are reported in Appendix~C.
+
+\paragraph{Reproducibility.} Both the testbench and the edge files are committed to a public GitHub repository. The scripted suite replays identically, whereas the live suite depends on a hosted model, so edge counts may vary between replication runs. A transcript monitor cannot recover these edges, because they are not derivable from any transcript.
+
+
 \section{Discussion and Limitations}
+
+\paragraph{What this changes.} Oversight of a multi-agent system fails at the record
+before it fails at the reasoning. Our results suggest the practical fix is not a
+better reader of transcripts but a different source of evidence: identity from the
+cgroup, object identity from device and inode, and a verdict from declared policy.
+That inverts the usual arrangement, in which a monitor is a second model reading
+what the first one said. Here the monitor is a kernel observation, and a supervisor
+is handed a de-fragmented account of what the group actually did. CDR is
+accordingly a monitor and not a controller: it reports edges, and whether an edge is
+sanctioned belongs to a policy the operator writes down.
+
+\paragraph{The boundary we claim.} Every claim here holds at the capability level we
+tested: root inside the container, no ability to change cgroup membership, attach a
+probe, or modify the kernel. An agent with host root can detach the sensor, and an
+agent able to write to another agent's cgroup cannot be distinguished from it by
+this mechanism. We state the boundary rather than defend it, because no in-band
+sensor can do better against a compromised kernel.
+
+\paragraph{Storage and time.} The mechanism joins on object state, so it recovers
+channels that change state: file contents, inode metadata, directory entries, pipes,
+mappings and socket inodes. A channel whose payload is a delay is outside it. We
+include a lock-contention probe precisely because it looks like a storage channel,
+touching an object both agents opened, while carrying its payload in how long one
+waits; it produces no edge, and a detector that keyed on medium rather than on
+observable would claim it.
+
+\paragraph{Where capture stops.} Two storage channels remain outside the current
+probe. Asynchronous interfaces move file I/O off the syscall boundary, so an
+\texttt{io\_uring} submission issues no syscall per operation and the operation is
+invisible even though the object is an ordinary file. Objects without a name are the
+second case: \texttt{memfd} and abstract-namespace sockets have an inode but no path
+to resolve. Both are capture problems rather than model problems, and the second is
+one mechanism away, since keying an object on the inode behind a file descriptor is
+the same join with a different source for the key.
+
+\paragraph{Scale and cost.} Cost follows syscall and event rate rather than agent
+count. Fifty agents issuing a thousand syscalls per second each cost a combined
+tenth of a core in probe time, which parallelises across the cores the agents run
+on, while the userspace side serialises in one process and caps throughput near
+nineteen thousand captured events per second. A host of fifty agents is comfortable
+at roughly a hundred captured events each per second; beyond that the sensor must be
+sharded by cgroup subtree.
 
 \subsection*{Limitations}
 
+Our deployment is three containers and up to three agents on one host, and the live
+suite is eighteen episodes against one hosted model. We have not measured a
+population large enough to test the sharding argument, and the scripted actors are
+deterministic, so they are easier than models: they do not hesitate, adapt or
+launder creatively. The live suite addresses that only partly.
+
+The capture boundary above is a real one. An agent that uses \texttt{io\_uring}, or
+that passes an anonymous file descriptor to a peer, defeats the probe without any of
+the deception this paper is about, and we do not claim otherwise.
+
+Attribution is a containment claim, not a proof: a syscall inside the subtree a
+declaration authorised is consistent with that declaration, and consistency is not
+causation. The policy layer is only as good as the policy, and a permissive sanction
+set will silence real collusion.
+
 \subsection*{Future Work}
+
+Four extensions follow. Hook the file-operation layer to reach \texttt{io\_uring} and
+AIO, which costs kernel-structure portability. Key objects on the inode behind a
+descriptor to reach unnamed channels. Move resolution off the event path, since
+\texttt{openat2} and \texttt{fstat} per captured event dominate the measured cost.
+And combine the object join with timing analysis, because the two channel classes
+need different instruments and neither subsumes the other.
 
 \section{Conclusion}
 
+Oversight that reads the transcript is answering a question about claims. When an
+agent can write that transcript, replace the binary it names, or report honestly
+about a name whose implementation is hostile, the answer is unrelated to what
+happened. Moving the join to the kernel's own object identity removes the transcript
+from the trust path: an agent cannot forge the cgroup it ran in or the inode it
+touched. Across 80 scripted episodes over 19 filesystem channels this recovers 88 of
+88 interactions with zero false edges, and across 18 episodes of model-driven agents
+it records 42 interactions that a transcript monitor misses entirely, including
+every episode in which the declaration was true and the named binary was not. The
+cost is a sharp boundary: storage channels that the kernel reports as syscalls, one
+host, and root inside the container as the top of the capability ladder.
+
 \section*{Code and Data}
+
+Sensor, harness, scenario testbench definitions, recorded logs and edge files, together
+with the scripts that produced every number in this paper.
+\begin{itemize}\raggedright
+\item Repository: \url{https://github.com/mikeywhiston/cdr}
+\item Data: episode logs in \texttt{testbed/episodes/}, committed with the code
+\item Dashboards: CDR comes with a dashboard defined in \texttt{testbed/kibana\_setup.py};
+the exported console view can be seen in Appendix~E
+\item Preexisting: the Docker Compose testbed definition
+(\texttt{testbed/docker-compose.yml} and the container \texttt{testbed/Dockerfile})
+predates the sprint by a day. Everything else reported here, including the eBPF probe,
+the detector, the scenario suite and the evaluation logs, was built and measured during
+November 6th to November 8th 2026
+\end{itemize}
 
 \section*{LLM Usage Statement}
 
+Language models were used in three ways. Kimi K2.7 Code served as the subject of the
+live suite, where model-driven agents produce the transcripts CDR is compared against. It was
+used to draft and debug parts of the implementation and of this report. Every claim
+in the report was checked against the repository: the numbers come from committed
+corpora and the scripts that generate them, and the sensor code was reviewed change
+by change. No result or reference in this paper was generated by a model.
+
 \bibliographystyle{acl_natbib}
+\bibliography{refs}
 
 \appendix
+
+\section{Event Schema}
+
+Each record is one syscall, or one edge derived from a pair of them, with the object
+identity that correlation used. Fields that the agent can influence are carried for
+diagnostics only.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}l p{0.58\columnwidth}@{}}
+\toprule
+Field & Meaning \\
+\midrule
+\texttt{ts\_ns} & monotonic clock at syscall entry \\
+\texttt{agent} & cgroup inode, the identity \\
+\texttt{nr} & syscall number \\
+\texttt{dev, ino} & resolved object identity \\
+\texttt{pdev, pino} & parent directory identity \\
+\texttt{resolved} & bitmask: bit 0 inode, bit 1 path, bit 2 aux; bits 3--4 select which object the inode pair describes \\
+\texttt{path} & path as the agent wrote it \\
+\texttt{kind} & \texttt{event}, \texttt{fork}, \texttt{edge} or \texttt{scrub} \\
+\bottomrule
+\end{tabular}
+\caption{Spool record. A \texttt{scrub} names an object deleted after an edge was
+published; it annotates the edge and never retracts it.}
+\end{table}
+
+\section{Defects}
+
+Six defects were found by scenario testing. Each entry gives the symptom and the
+metric that moved.
+
+\begin{itemize}\raggedright
+\item \textbf{Absolute symlink targets} resolved against the host root, so unrelated
+symlinks collided on one host inode. False positives fell from 13 to 0.
+\item \textbf{Rename destinations} were captured but never correlated, so a
+rename-based exchange produced no edge. Recall 0.75 to 1.00.
+\item \textbf{Global path cache} keyed on path alone, letting one agent's inode stand
+in for another's unresolved path. False positives 18 to 0.
+\item \textbf{Cache invalidation} missed delete-and-recreate, so an exchange through
+a recreated inode was attributed to the previous owner. Four misses at run 4 of
+Table~\ref{tab:runs}, zero at run 5.
+\item \textbf{Dangling mount root} from a process that had exited silently zeroed
+resolution for an agent. Found by the colocation scenario, which produced no edges
+until resolution gained a fallback chain.
+\item \textbf{\texttt{bind} absent from the mutator table}, so a socket exchange
+scored only when the scenario's cleanup \texttt{unlink} supplied the mutator. The
+stricter bind-only variant exposed it.
+\end{itemize}
+
+\section{Operating Cost}
+
+The probe runs on a tracepoint, so its program executes in the traced thread: on a
+workload of 1,500 open/read/close triples the workload's own CPU time rose by
+$35\%$, about $1.8\,\mu$s per syscall. Confining the sensor to a separate core did
+not change that figure, which places the cost in the traced context rather than in
+scheduling contention. The sensor process spent $54\,\mu$s of CPU per captured
+event, measured at two event rates, $47\%$ of one core at roughly 9,000 events per
+second. Resolution runs \texttt{openat2} and \texttt{fstat} per captured event and is
+the first optimisation we would make.
+
+\section{Dual Use and Ethical Considerations}
+
+This is a surveillance mechanism. It observes every file interaction of every
+process in the slice and attributes it to an agent, which is what a benign operator
+needs and also what an oppressive one needs to monitor people. Three design choices
+limit the exposure: the sensor reads metadata rather than file contents; edges are
+retained as identity, object and time rather than payloads; and a verdict requires a
+sanction set the operator must write down, which makes surveillance scope visible to
+audit. It observes no keystrokes, screen contents, network payloads or memory, and we
+recommend deploying it where agents, not people, are the subjects.
+
+The apparatus is dual-use in a second sense. An operator can use it to detect
+collusion, and an adversary who knows its rules can coordinate without producing
+edges, for example by using only timing. That argues for pairing it with
+timing-channel analysis, not for withholding it.
+
+
+\onecolumn
+\section{Operational Artefact}
+
+The console view in Figure~\ref{fig:console} is produced by the shipped pipeline: the
+sensor writes spool records, the shipper indexes them, and an analyst queries the
+result. It is an artefact of operational use rather than evidence, and the
+measurements are in Section~4.
+
+The distinction it draws is the one the rest of the paper makes. The upper table is
+what the kernel witnessed: two actions attributed to two agents, one of them with no
+declaration behind it, and two scrub records noting that the object was deleted after
+the edge was published. The lower table is what one of those agents said about its own
+work. Keeping both in a single view is what lets an investigator notice when they
+disagree, and it is why the reasoning panel is labelled rather than hidden: an agent's
+account is context for a human, never the basis of a verdict.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{figures/kibana.png}
+\caption{Analyst view during an interactive session. Above, attribution rows name the
+declared command of each side, one row marks the second agent's command as
+\texttt{unaccounted}, and two \texttt{scrub} records annotate the object deleted after
+the edge was published. Below, the agent's own reasoning is retained and labelled
+\texttt{agent-authored}, so it is available to an analyst as context and can never be
+mistaken for evidence. Document counts are from the session shown, not from the
+evaluation runs in Section~4.}
+\label{fig:console}
+\end{figure}
 
 \end{document}

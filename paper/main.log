@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.21)  8 NOV 2026 05:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.21)  8 NOV 2026 20:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -437,7 +437,7 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 ) (/home/mikey/.TinyTeX/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verbatim
 )
-<sentinel-wordmark.pdf, id=28, 5034.8002pt x 650.88771pt>
+<sentinel-wordmark.pdf, id=48, 5034.8002pt x 650.88771pt>
 File: sentinel-wordmark.pdf Graphic file (type pdf)
 <use sentinel-wordmark.pdf>
 Package pdftex.def Info: sentinel-wordmark.pdf  used on input line 47.
@@ -479,39 +479,81 @@ Underfull \hbox (badness 10000) in paragraph at lines 113--117
 \T1/ptm/b/n/10.95 (+20) transcript-only mon-i-tor-ing pro-vides.
  []
 
-<figures/fig1.pdf, id=44, 614.295pt x 794.97pt>
+
+Underfull \hbox (badness 6526) in paragraph at lines 136--145
+ []\T1/ptm/b/n/10.95 (+20) Kernel prove-nance and run-time se-cu-rity.[]
+ []
+
+<figures/fig1.pdf, id=92, 614.295pt x 794.97pt>
 File: figures/fig1.pdf Graphic file (type pdf)
 <use figures/fig1.pdf>
-Package pdftex.def Info: figures/fig1.pdf  used on input line 131.
+Package pdftex.def Info: figures/fig1.pdf  used on input line 170.
 (pdftex.def)             Requested size: 455.24411pt x 192.36821pt.
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 132.
-
-Underfull \hbox (badness 1571) in paragraph at lines 144--145
+(Font)              scaled to size 10.0pt on input line 171.
+[2]
+Underfull \hbox (badness 1571) in paragraph at lines 183--184
 \T1/ptm/m/n/10.95 (+20) against an \T1/zi4/m/n/10.95 O_PATH \T1/ptm/m/n/10.95 (+20) de-scrip-tor for the agent's
  []
 
-[2] [3 <./figures/fig1.pdf>] (./main.aux)
+[3 <./figures/fig1.pdf>]
+Underfull \hbox (badness 1117) in paragraph at lines 192--195
+ []\T1/ptm/b/n/10.95 (+20) Environment.[] \T1/ptm/m/n/10.95 (+20) Three slim De-bian con-tain-ers
+ []
+
+[4] [5] [6]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 363.
+ (/home/mikey/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) (./main.bbl
+Underfull \hbox (badness 1939) in paragraph at lines 30--33
+[]\T1/ptm/m/n/10 (+20) Lewis Ham-mond, Alan Chan, Jesse Clifton, Ja-
+ []
+
+
+Underfull \hbox (badness 3568) in paragraph at lines 30--33
+\T1/ptm/m/n/10 (+20) son Hoelscher-Obermaier, Ak-bir Khan, et al.
+ []
+
+
+Underfull \hbox (badness 3250) in paragraph at lines 30--33
+\T1/ptm/m/n/10 (+20) 2025.  Multi-agent risks from ad-vanced AI.
+ []
+
+[7])
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 9.0pt on input line 401.
+LaTeX Font Info:    Font shape `T1/zi4/b/n' will be
+(Font)              scaled to size 10.95pt on input line 433.
+ [8]
+<figures/kibana.png, id=220, 1801.73125pt x 755.82375pt>
+File: figures/kibana.png Graphic file (type png)
+<use figures/kibana.png>
+Package pdftex.def Info: figures/kibana.png  used on input line 484.
+(pdftex.def)             Requested size: 455.24411pt x 190.97372pt.
+ [9
+
+ <./figures/kibana.png>] (./main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-09-09>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 9589D75361A3763F1C773BDCC90054B2;637.
+(rerunfilecheck)             Checksum: 26A076E2B2C99AE26E72180F2139DADC;1320.
  ) 
 Here is how much of TeX's memory you used:
- 14571 strings out of 469040
- 233276 string characters out of 5457101
- 700752 words of memory out of 5000000
- 43289 multiletter control sequences out of 15000+600000
- 669294 words of font info for 213 fonts, out of 8000000 for 9000
+ 14840 strings out of 469040
+ 236958 string characters out of 5457101
+ 703577 words of memory out of 5000000
+ 43398 multiletter control sequences out of 15000+600000
+ 679391 words of font info for 288 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,12n,93p,1287b,584s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (3 pages, 158085 bytes).
+ 89i,12n,93p,1287b,610s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/mikey/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (9 pages, 293815 bytes).
 PDF statistics:
- 132 PDF objects out of 1000 (max. 8388607)
- 98 compressed objects within 1 object stream
- 18 named destinations out of 1000 (max. 500000)
- 42049 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 287 PDF objects out of 1000 (max. 8388607)
+ 241 compressed objects within 3 object streams
+ 68 named destinations out of 1000 (max. 500000)
+ 51310 words of extra memory for PDF output out of 51595 (max. 10000000)
 

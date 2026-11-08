@@ -89,7 +89,7 @@ against execution rather than trust them.
 All results in this repository were formed by `testbed/` and numbers were not influenced by any models.
 Running `testbed/` on a clone regenerates every scripted number reported within the paper, and
 the scripted tests will replay identically. However, the live suite depends on 
-hosted models (namely Deepseek V4.1 Flash via OpenCode Go), so CDR's edge counts will 
+hosted models (namely Kimi K2.7 Code via OpenCode Go), so CDR's edge counts will 
 differ from run to run. A transcript monitor will remain consistent at recovering zero interactions, 
 because CDR's edges are not derivable by any transcript.
 
