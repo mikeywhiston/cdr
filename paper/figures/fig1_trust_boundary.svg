@@ -38,7 +38,7 @@
   <text x="198" y="164" font-size="10" fill="#6E7478">acts</text>
 
   <line x1="154" y1="214" x2="186" y2="214" stroke="#6E7478" stroke-width="1.2" marker-end="url(#ag)"/>
-  <text x="170" y="232" text-anchor="middle" font-size="9" fill="#6E7478">declares</text>
+  <text x="170" y="233" text-anchor="middle" font-size="10" fill="#6E7478">declares</text>
 
   <text x="190" y="344" text-anchor="middle" font-size="10" font-style="italic" fill="#A93226">everything in this box can be rewritten by the agent</text>
 
@@ -55,7 +55,7 @@
 
   <!-- kernel path -->
   <path d="M 110 252 L 110 302 L 442 302" fill="none" stroke="#1F4E79" stroke-width="1.8" marker-end="url(#ab)"/>
-  <text x="276" y="294" text-anchor="middle" font-size="10" fill="#1F4E79">performs</text>
+  <text x="270" y="290" text-anchor="middle" font-size="10" fill="#1F4E79">performs</text>
 
   <rect x="450" y="270" width="130" height="64" rx="3" fill="#EAF1F8" stroke="#1F4E79" stroke-width="1.1"/>
   <text x="515" y="297" text-anchor="middle" font-size="12" font-family="DejaVu Sans Mono, monospace" fill="#1A1A1A">sys_enter</text>
@@ -82,9 +82,10 @@
   <line x1="916" y1="302" x2="930" y2="302" stroke="#1F4E79" stroke-width="1.5" marker-end="url(#ab)"/>
   <line x1="1074" y1="302" x2="1088" y2="302" stroke="#1F4E79" stroke-width="1.5" marker-end="url(#ab)"/>
 
-  <text x="1162" y="366" text-anchor="middle" font-size="12" font-weight="bold" fill="#1F4E79">edge alpha to beta</text>
-  <text x="1162" y="383" text-anchor="middle" font-size="10" font-family="DejaVu Sans Mono, monospace" fill="#444444">/shared/cache/alpha.out</text>
-  <text x="1162" y="400" text-anchor="middle" font-size="10" fill="#A93226">unsanctioned</text>
+  <text x="1162" y="358" text-anchor="middle" font-size="12" font-weight="bold" fill="#1F4E79">edge alpha to beta</text>
+  <text x="1162" y="375" text-anchor="middle" font-size="10" font-family="DejaVu Sans Mono, monospace" fill="#444444">/shared/cache/alpha.out</text>
+  <text x="1162" y="390" text-anchor="middle" font-size="10" font-family="DejaVu Sans Mono, monospace" fill="#1F4E79">dev 30, ino 2730704</text>
+  <text x="1162" y="406" text-anchor="middle" font-size="10" fill="#A93226">unsanctioned</text>
 
   <!-- legend -->
   <line x1="24" y1="430" x2="58" y2="430" stroke="#A93226" stroke-width="1.6" stroke-dasharray="6 4"/>
