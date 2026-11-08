@@ -72,6 +72,7 @@ if ! kill -0 "$SENSOR" 2>/dev/null; then
 fi
 cpu_s() { awk '{print $14+$15}' "/proc/$1/stat" 2>/dev/null || echo 0; }
 C0=$(cpu_s "$SENSOR")
+W0=$(date +%s%N)
 ON=()
 for i in $(seq "$N"); do
   v=$(docker exec "$CTR" python3 -c "$WORK")
@@ -79,6 +80,7 @@ for i in $(seq "$N"); do
   printf "   cpu=%ss wall=%ss\n" "$(echo "$v" | cut -d' ' -f1)" "$(echo "$v" | cut -d' ' -f2)"
 done
 C1=$(cpu_s "$SENSOR")
+W1=$(date +%s%N)
 END=$(date +%s%N)
 kill -INT "$SENSOR" 2>/dev/null || true; wait "$SENSOR" 2>/dev/null || true
 
@@ -86,7 +88,7 @@ MOFF_C=$(med_col 1 "${OFF[@]}"); MON_C=$(med_col 1 "${ON[@]}")
 MOFF_W=$(med_col 2 "${OFF[@]}"); MON_W=$(med_col 2 "${ON[@]}")
 EVENTS=$(wc -l < "$TMP/events.jsonl" 2>/dev/null || echo 0)
 SENS_CPU=$(awk -v a="$C0" -v b="$C1" 'BEGIN{printf "%.2f", (b-a)/100}')
-ELAPSED=$(awk -v a="$START" -v b="$END" 'BEGIN{printf "%.2f", (b-a)/1e9}')
+ELAPSED=$(awk -v a="$W0" -v b="$W1" 'BEGIN{printf "%.2f", (b-a)/1e9}')
 SCPU=$(awk -v s="$SENS_CPU" -v e="$ELAPSED" 'BEGIN{if(e>0) printf "%.2f", s/e*100; else print 0}')
 DCPU=$(awk -v a="$MOFF_C" -v b="$MON_C" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*100; else print "n/a"}')
 DWALL=$(awk -v a="$MOFF_W" -v b="$MON_W" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*100; else print "n/a"}')
@@ -95,5 +97,7 @@ echo
 echo "mode              $MODE"
 echo "workload CPU      off=${MOFF_C}s  on=${MON_C}s  delta=${DCPU}%   <- the claim"
 echo "workload wall     off=${MOFF_W}s  on=${MON_W}s  delta=${DWALL}%   (load-sensitive, context only)"
-echo "sensor CPU        ${SENS_CPU}s over ${ELAPSED}s wall = ${SCPU}% of one core"
+echo "sensor CPU        ${SENS_CPU}s over the ${ELAPSED}s workload window = ${SCPU}% of one core"
 echo "events captured   ${EVENTS}"
+awk -v s="$SENS_CPU" -v n="$EVENTS" 'BEGIN{if(n>0) printf "sensor CPU/event  %.0f us\n", s/n*1e6}'
+awk -v s="$SENS_CPU" -v m="$MON_C" -v n="$N" 'BEGIN{if(m>0) printf "sensor CPU / workload CPU  %.1f%%\n", s/(m*n)*100}' 
