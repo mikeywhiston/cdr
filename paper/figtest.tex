@@ -1,0 +1,35 @@
+\documentclass[11pt]{article}
+\usepackage[preprint]{acl}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\title{Figure placement test}
+\author{Test}
+\begin{document}
+\maketitle
+\section{Introduction}
+Agents that hold a shell can write the record of their own actions. We remove
+that record from the trust path: a kernel probe attributes each file touch to an
+agent by cgroup inode, and two agents touching the same object become an edge.
+The sentence here exists only to establish body text at the same size as the
+caption, so the comparison against the figure labels is honest. Body text in this
+template is set at eleven points on a measure of six and a half inches, which is
+what a reader will see beside the figure in the finished paper.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_trust_boundary.pdf}
+\caption{One action produces two records. Left of the dashed line everything is
+written by the agent and can be rewritten by it; the log-only monitor has no
+other input, so it sees the claim and reports nothing. Right of the line the
+kernel witnesses the syscall, resolves who acted and on what, and the correlator
+emits an edge. The object is identified by device and inode rather than by path.}
+\label{fig:trust}
+\end{figure*}
+
+\noindent Body text after the figure. The caption is the standard test: if the
+figure labels are legible at the same reading distance as this paragraph when the
+PDF is viewed at one hundred percent, the figure will survive print and screen.
+\end{document}
