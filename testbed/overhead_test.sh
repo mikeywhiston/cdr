@@ -64,10 +64,7 @@ done
 echo "== sensor on =="
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 START=$(date +%s%N)
-PIN="${PIN:-0}"; CORE="${CORE:-0}"
-LAUNCH=()
-[ "$PIN" = "1" ] && LAUNCH=(taskset -c "$CORE")
-"${LAUNCH[@]}" "$BIN" run --spool "$TMP/events.jsonl" --edges "$TMP/edges.jsonl" > "$TMP/sensor.log" 2>&1 &
+"$BIN" run --spool "$TMP/events.jsonl" --edges "$TMP/edges.jsonl" > "$TMP/sensor.log" 2>&1 &
 SENSOR=$!
 sleep 3
 if ! kill -0 "$SENSOR" 2>/dev/null; then
@@ -97,7 +94,7 @@ DCPU=$(awk -v a="$MOFF_C" -v b="$MON_C" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*1
 DWALL=$(awk -v a="$MOFF_W" -v b="$MON_W" 'BEGIN{if(a>0) printf "%+.2f", (b-a)/a*100; else print "n/a"}')
 
 echo
-echo "mode              $MODE   pin=$PIN"
+echo "mode              $MODE"
 echo "workload CPU      off=${MOFF_C}s  on=${MON_C}s  delta=${DCPU}%   <- the claim"
 echo "workload wall     off=${MOFF_W}s  on=${MON_W}s  delta=${DWALL}%   (load-sensitive, context only)"
 echo "sensor CPU        ${SENS_CPU}s over the ${ELAPSED}s workload window = ${SCPU}% of one core"

@@ -300,33 +300,23 @@ fn syscall_name(nr: u16) -> String {
         .unwrap_or_else(|| format!("sys_{nr}"))
 }
 
-fn path_hash(path: &str) -> u64 {
-    use std::hash::{Hash, Hasher};
-    let mut h = std::collections::hash_map::DefaultHasher::new();
-    path.hash(&mut h);
-    h.finish()
-}
-
 fn resolve_cached(
     path: &str,
     agent: u64,
     tgid: u32,
     roots: &StdHashMap<u64, String>,
     rootfds: &StdHashMap<u64, i32>,
-    cache: &mut StdHashMap<(u64, u64), (String, (u64, u64))>,
+    cache: &mut StdHashMap<(u64, String), (u64, u64)>,
 ) -> Option<(u64, u64)> {
     if path.is_empty() {
         return None;
     }
-    let key = (agent, path_hash(path));
-    // a hit costs a hash and a compare, no allocation
-    if let Some((cached_path, hit)) = cache.get(&key) {
-        if cached_path == path {
-            return Some(*hit);
-        }
+    let key = (agent, path.to_string());
+    if let Some(hit) = cache.get(&key) {
+        return Some(*hit);
     }
     let resolved = statx_key(path, tgid, roots.get(&agent).map(|s| s.as_str()), rootfds.get(&agent).copied())?;
-    cache.insert(key, (path.to_string(), resolved));
+    cache.insert(key, resolved);
     Some(resolved)
 }
 
@@ -410,22 +400,18 @@ fn render_event(
     aux_raw: &str,
     roots: &StdHashMap<u64, String>,
     rootfds: &StdHashMap<u64, i32>,
-    cache: &mut StdHashMap<(u64, u64), (String, (u64, u64))>,
+    cache: &mut StdHashMap<(u64, String), (u64, u64)>,
     ppids: &mut StdHashMap<u32, u32>,
 ) -> (String, bool) {
     let path = escape_argv(path_raw.as_bytes());
     let aux = escape_argv(aux_raw.as_bytes());
     if ev.syscall_nr == 257 || ev.syscall_nr == 2 {
         if ev.arg2 & 0o100 != 0 {
-            cache.remove(&(ev.agent_id, path_hash(path_raw)));
+            cache.remove(&(ev.agent_id, path_raw.to_string()));
         }
     }
     let (dev, ino) = resolve_cached(path_raw, ev.agent_id, ev.tgid, roots, rootfds, cache).unwrap_or((0, 0));
-    let (adev, aino) = if aux_raw.is_empty() {
-        (0, 0)
-    } else {
-        resolve_cached(aux_raw, ev.agent_id, ev.tgid, roots, rootfds, cache).unwrap_or((0, 0))
-    };
+    let (adev, aino) = resolve_cached(aux_raw, ev.agent_id, ev.tgid, roots, rootfds, cache).unwrap_or((0, 0));
     let ppid = ppid_of(ev.tgid, ppids);
     let (pdev, pino) = parent_of(path_raw)
         .and_then(|dir| resolve_cached(dir, ev.agent_id, ev.tgid, roots, rootfds, cache))
@@ -732,7 +718,7 @@ async fn sensor_main() -> anyhow::Result<()> {
     let pdrops = PerCpuArray::<_, u64>::try_from(ebpf.take_map("PDROPS").unwrap())?;
     let nr_hist = PerCpuArray::<_, u64>::try_from(ebpf.take_map("NR_HIST").unwrap())?;
 
-    let mut ino_cache: StdHashMap<(u64, u64), (String, (u64, u64))> = StdHashMap::new();
+    let mut ino_cache: StdHashMap<(u64, String), (u64, u64)> = StdHashMap::new();
     let mut ppids: StdHashMap<u32, u32> = StdHashMap::new();
     let mut roots: StdHashMap<u64, String> = StdHashMap::new();
     let mut rootfds: StdHashMap<u64, i32> = StdHashMap::new();
@@ -838,8 +824,7 @@ async fn sensor_main() -> anyhow::Result<()> {
                 }
             }
         }
-        let mut consumed = 0usize;
-        while let Some(item) = ring_buf.next() {
+        if let Some(item) = ring_buf.next() {
             if item.len() >= std::mem::size_of::<Event>() {
                 let event = unsafe { &*(item.as_ptr() as *const Event) };
 
@@ -853,10 +838,8 @@ async fn sensor_main() -> anyhow::Result<()> {
                     aux: aux_raw,
                     attempts: 0,
                 });
-                consumed += 1;
             }
-        }
-        if consumed == 0 {
+        } else {
             tokio::time::sleep(std::time::Duration::from_millis(5)).await;
         }
     }
