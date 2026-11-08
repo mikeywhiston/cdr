@@ -1,5 +1,5 @@
-{"kind":"desync","class":"match","variant":"honest","agent":383909,"ts_ns":243542856321612,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":1886399}
-{"kind":"desync","class":"match","variant":"honest","agent":383723,"ts_ns":243536642321612,"declared":"cargo test","observed":"cargo test","tgid":1886236}
-{"kind":"attribution","variant":"honest","ts_ns":243542987955217,"dev":29,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"honest","ts_ns":243542987955217,"dev":29,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"honest","ts_ns":243542987955217,"dev":29,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}
+{"kind":"desync","class":"match","variant":"honest","agent":17520,"ts_ns":2039334405974,"declared":"cargo test","observed":"cargo test","tgid":63567}
+{"kind":"desync","class":"match","variant":"honest","agent":17613,"ts_ns":2044724405974,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":63707}
+{"kind":"attribution","variant":"honest","ts_ns":2044794617483,"dev":30,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"honest","ts_ns":2044794617483,"dev":30,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"honest","ts_ns":2044794617483,"dev":30,"ino":2693466,"path":"/shared","src_declared":"cargo test","dst_declared":"python3 /tmp/payload/b.py","verdict":"unsanctioned"}

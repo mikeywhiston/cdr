@@ -1,7 +1,10 @@
 [INFO  ebpf_agent] fork tracepoint on, parent_off=12 child_off=20
 [INFO  ebpf_agent] resolved 3 container namespace roots
-[INFO  ebpf_agent] agent ino=383909 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-31b13adc1be024ec6215581bc5713c606444f97b946432a69d366f5fde2aaf2f.scope
-[INFO  ebpf_agent] agent ino=383723 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope
-[INFO  ebpf_agent] agent ino=383816 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-32b09e4de437e42f881b7cc54d52b4e64fb1ae7d6ee75e8e291f84098d932232.scope
+[INFO  ebpf_agent] agent ino=17613 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-31b13adc1be024ec6215581bc5713c606444f97b946432a69d366f5fde2aaf2f.scope
+[INFO  ebpf_agent] agent ino=17520 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope
+[INFO  ebpf_agent] agent ino=17706 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-32b09e4de437e42f881b7cc54d52b4e64fb1ae7d6ee75e8e291f84098d932232.scope
 [INFO  ebpf_agent] binary_built_unix=1794092164
 [INFO  ebpf_agent] streaming -> /home/mikey/Documents/swarm-adr/testbed/episodes/live-covert-1/events.jsonl / /home/mikey/Documents/swarm-adr/testbed/episodes/live-covert-1/edges.jsonl; Ctrl-C to stop
+es-sink: shipped=1009 failed=0 queue_dropped=0
+Exiting... events_ok, drops=0, payload_drops=0, oos=1280697, syscalls=82473
+[INFO  ebpf_agent] nr_hist_top10=futex(202:30649) madvise(28:9346) pread64(17:8631) sched_yield(24:4581) fstat(5:3016) fcntl(72:2568) pwrite64(18:2428) close(3:2364) openat(257:2094) rt_sigaction(13:1464)

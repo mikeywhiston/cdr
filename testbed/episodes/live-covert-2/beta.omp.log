@@ -1,4 +1,2 @@
 Working...
-Command ran successfully with no output.
-
-`python3 /tmp/payload/b.py` — wall time 6.17s, exit 0.
+Ran `python3 /tmp/payload/b.py`: exited with no output in ~6.1s.

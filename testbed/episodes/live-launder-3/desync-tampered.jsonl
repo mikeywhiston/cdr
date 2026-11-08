@@ -1,6 +1,6 @@
-{"kind":"desync","class":"match","variant":"tampered","agent":383723,"ts_ns":243395410321662,"declared":"pytest -q","observed":"pytest -q","tgid":1882107}
-{"kind":"desync","class":"mismatch","variant":"tampered","agent":383909,"ts_ns":243401025321662,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
-{"kind":"desync","class":"surplus","variant":"tampered","agent":383909,"ts_ns":243401025321662,"unaccounted":["python3 /tmp/payload/b.py"]}
-{"kind":"attribution","variant":"tampered","ts_ns":243401112358927,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"tampered","ts_ns":243401112358927,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"tampered","ts_ns":243401112358927,"dev":29,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"desync","class":"mismatch","variant":"tampered","agent":17613,"ts_ns":1907563405974,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"desync","class":"surplus","variant":"tampered","agent":17613,"ts_ns":1907563405974,"unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"desync","class":"match","variant":"tampered","agent":17520,"ts_ns":1901298405974,"declared":"pytest -q","observed":"pytest -q","tgid":59975}
+{"kind":"attribution","variant":"tampered","ts_ns":1907631628047,"dev":30,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":1907631628047,"dev":30,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":1907631628047,"dev":30,"ino":2693466,"path":"/shared","src_declared":"pytest -q","dst_declared":"unaccounted","verdict":"unsanctioned"}

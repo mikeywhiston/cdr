@@ -1,2 +1,2 @@
 Working...
-All tests passed.
+`cargo test` → all tests passed.

@@ -1,5 +1,5 @@
-{"kind":"desync","class":"match","variant":"honest","agent":383723,"ts_ns":243251392321613,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":1877297}
-{"kind":"desync","class":"match","variant":"honest","agent":383909,"ts_ns":243257819321613,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":1877478}
-{"kind":"attribution","variant":"honest","ts_ns":243259917193807,"dev":29,"ino":2723812,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}
-{"kind":"attribution","variant":"honest","ts_ns":243259917193807,"dev":29,"ino":2723812,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}
-{"kind":"attribution","variant":"honest","ts_ns":243259917598545,"dev":29,"ino":2723813,"path":"/shared/cache/alpha.out","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}
+{"kind":"desync","class":"match","variant":"honest","agent":17520,"ts_ns":1767944405965,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":55847}
+{"kind":"desync","class":"match","variant":"honest","agent":17613,"ts_ns":1774531405965,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":55978}
+{"kind":"attribution","variant":"honest","ts_ns":1776624369448,"dev":30,"ino":2730785,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}
+{"kind":"attribution","variant":"honest","ts_ns":1776624369448,"dev":30,"ino":2730785,"path":"/shared/cache","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}
+{"kind":"attribution","variant":"honest","ts_ns":1776624791898,"dev":30,"ino":2730786,"path":"/shared/cache/alpha.out","src_declared":"python3 /tmp/payload/a.py","dst_declared":"python3 /tmp/payload/b.py","verdict":"sanctioned"}

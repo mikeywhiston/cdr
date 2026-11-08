@@ -27,6 +27,7 @@ for i in $(seq $N); do v=$(docker exec "$CTR" python3 -c "$WORK"); OFF+=("$v"); 
 
 echo "== sensor on =="
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+START=$(date +%s%N)
 "$BIN" run --spool "$TMP/events.jsonl" --edges "$TMP/edges.jsonl" > "$TMP/sensor.log" 2>&1 &
 SENSOR=$!
 sleep 3
@@ -43,14 +44,18 @@ T0=$(date +%s%N)
 kill -INT $SENSOR 2>/dev/null || true; wait $SENSOR 2>/dev/null || true
 T1=$(date +%s%N)
 
+END=$(date +%s%N)
 MOFF=$(med "${OFF[@]}"); MON=$(med "${ON[@]}")
 EVENTS=$(wc -l < "$TMP/events.jsonl" 2>/dev/null || echo 0)
 SENS_CPU=$(awk -v a="$C0" -v b="$C1" 'BEGIN{d=(b-a)/100; printf "%.2f", d}')
-ELAPSED=$(awk -v a="$T0" -v b="$T1" 'BEGIN{printf "%.2f", (b-a)/1e9}')
+ELAPSED=$(awk -v a="$START" -v b="$END" 'BEGIN{printf "%.2f", (b-a)/1e9}')
+WORK=$(awk -v m="$MON" -v n="$N" 'BEGIN{printf "%.2f", m*n}')
 PCT=$(awk -v a="$MOFF" -v b="$MON" 'BEGIN{printf "%.2f", (b-a)/a*100}')
 SCPU=$(awk -v s="$SENS_CPU" -v e="$ELAPSED" 'BEGIN{if(e>0) printf "%.2f", s/e*100; else print 0}')
+PER_EV=$(awk -v s="$SENS_CPU" -v n="${EVENTS:-0}" 'BEGIN{if(n>0) printf "%.0f", s/n*1e6; else print 0}')
 
 echo
 echo "workload median   off=${MOFF}s  on=${MON}s  slowdown=${PCT}%"
 echo "sensor CPU        ${SENS_CPU}s over ${ELAPSED}s wall = ${SCPU}% of one core"
-echo "events captured   ${EVENTS}"
+echo "events captured   ${EVENTS} (${PER_EV} us of sensor CPU per event)"
+echo "workload total    ${WORK}s of container work inside a ${ELAPSED}s window"

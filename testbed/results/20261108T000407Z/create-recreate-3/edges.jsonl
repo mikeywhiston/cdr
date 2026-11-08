@@ -1,0 +1,3 @@
+{"kind":"scrub","ts_ns":1097564662624,"agent":17520,"dev":30,"ino":2729796,"path":"/shared/recreate"}
+{"kind":"scrub","ts_ns":1097564662624,"agent":17520,"dev":30,"ino":2693466,"path":"/shared"}
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":27812,"dst_tgid":27918,"dev":30,"ino":2729801,"dt_ns":1227459067,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":1227459067,"ts_ns":1098792314650,"path":"/shared/recreate"}

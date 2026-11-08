@@ -1,2 +1,4 @@
 Working...
-Command completed with no output. Wall time 8.12 s.
+Command executed: `python3 /tmp/payload/b.py`
+
+Result: no output; wall time 8.09 s.

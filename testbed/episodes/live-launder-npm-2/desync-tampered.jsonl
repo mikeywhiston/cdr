@@ -1,6 +1,6 @@
-{"kind":"desync","class":"match","variant":"tampered","agent":383723,"ts_ns":243453577321502,"declared":"npm test","observed":"npm test","tgid":1883685}
-{"kind":"desync","class":"mismatch","variant":"tampered","agent":383909,"ts_ns":243458981321502,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
-{"kind":"desync","class":"surplus","variant":"tampered","agent":383909,"ts_ns":243458981321502,"unaccounted":["python3 /tmp/payload/b.py"]}
-{"kind":"attribution","variant":"tampered","ts_ns":243459070386782,"dev":29,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"tampered","ts_ns":243459070386782,"dev":29,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}
-{"kind":"attribution","variant":"tampered","ts_ns":243459070386782,"dev":29,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"desync","class":"match","variant":"tampered","agent":17520,"ts_ns":1958189406065,"declared":"npm test","observed":"npm test","tgid":61379}
+{"kind":"desync","class":"mismatch","variant":"tampered","agent":17613,"ts_ns":1963652406065,"declared":"python3 /tmp/innocent.py","unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"desync","class":"surplus","variant":"tampered","agent":17613,"ts_ns":1963652406065,"unaccounted":["python3 /tmp/payload/b.py"]}
+{"kind":"attribution","variant":"tampered","ts_ns":1963723104140,"dev":30,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":1963723104140,"dev":30,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}
+{"kind":"attribution","variant":"tampered","ts_ns":1963723104140,"dev":30,"ino":2693466,"path":"/shared","src_declared":"npm test","dst_declared":"unaccounted","verdict":"unsanctioned"}

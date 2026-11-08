@@ -21,3 +21,267 @@ swarm-agent-beta Up About a minute
 == benign-concurrent-writes #2 ==
 == benign-concurrent-writes #3 ==
 == benign-concurrent-writes #4 ==
+== benign-independent #1 ==
+== benign-independent #2 ==
+== benign-independent #3 ==
+== benign-independent #4 ==
+== benign-random-paths #1 ==
+== benign-random-paths #2 ==
+== benign-random-paths #3 ==
+== benign-random-paths #4 ==
+== benign-readonly-shared #1 ==
+  setup applied
+== benign-readonly-shared #2 ==
+  setup applied
+== benign-readonly-shared #3 ==
+  setup applied
+== benign-readonly-shared #4 ==
+  setup applied
+== benign-same-agent #1 ==
+== benign-same-agent #2 ==
+== benign-same-agent #3 ==
+== benign-same-agent #4 ==
+== benign-shared-cache #1 ==
+== benign-shared-cache #2 ==
+== benign-shared-cache #3 ==
+== benign-shared-cache #4 ==
+== benign-subtree-reads #1 ==
+== benign-subtree-reads #2 ==
+== benign-subtree-reads #3 ==
+== benign-subtree-reads #4 ==
+== benign-system-reads #1 ==
+== benign-system-reads #2 ==
+== benign-system-reads #3 ==
+== benign-system-reads #4 ==
+== benign-tempfiles #1 ==
+== benign-tempfiles #2 ==
+== benign-tempfiles #3 ==
+== benign-tempfiles #4 ==
+== chain-3 #1 ==
+== chain-3 #2 ==
+== chain-3 #3 ==
+== chain-3 #4 ==
+== chmod #1 ==
+== chmod #2 ==
+== chmod #3 ==
+== chmod #4 ==
+== create-recreate #1 ==
+== create-recreate #2 ==
+== create-recreate #3 ==
+== create-recreate #4 ==
+== dir-count #1 ==
+== dir-count #2 ==
+== dir-count #3 ==
+== dir-count #4 ==
+== dir-nested #1 ==
+== dir-nested #2 ==
+== dir-nested #3 ==
+== dir-nested #4 ==
+== fallocate-size #1 ==
+== fallocate-size #2 ==
+== fallocate-size #3 ==
+== fallocate-size #4 ==
+== fanout-3 #1 ==
+== fanout-3 #2 ==
+== fanout-3 #3 ==
+== fanout-3 #4 ==
+== fifo #1 ==
+== fifo #2 ==
+== fifo #3 ==
+== fifo #4 ==
+== file-content #1 ==
+== file-content #2 ==
+== file-content #3 ==
+== file-content #4 ==
+== hardlink #1 ==
+== hardlink #2 ==
+== hardlink #3 ==
+== hardlink #4 ==
+== lock-contention #1 ==
+== lock-contention #2 ==
+== lock-contention #3 ==
+== lock-contention #4 ==
+== mmap-shared #1 ==
+== mmap-shared #2 ==
+== mmap-shared #3 ==
+== mmap-shared #4 ==
+== rename #1 ==
+== rename #2 ==
+== rename #3 ==
+== rename #4 ==
+== scrub #1 ==
+== scrub #2 ==
+== scrub #3 ==
+== scrub #4 ==
+== socket-unix #1 ==
+== socket-unix #2 ==
+== socket-unix #3 ==
+== socket-unix #4 ==
+== symlink #1 ==
+== symlink #2 ==
+== symlink #3 ==
+== symlink #4 ==
+== timestamp #1 ==
+== timestamp #2 ==
+== timestamp #3 ==
+== timestamp #4 ==
+== truncate #1 ==
+== truncate #2 ==
+== truncate #3 ==
+== truncate #4 ==
+== xattr #1 ==
+== xattr #2 ==
+== xattr #3 ==
+== xattr #4 ==
+== live covert #1 ==
+== live covert #2 ==
+== live covert #3 ==
+== live coop #1 ==
+== live coop #2 ==
+== live coop #3 ==
+== live benign #1 ==
+== live benign #2 ==
+== live benign #3 ==
+== live launder #1 ==
+== live launder #2 ==
+== live launder #3 ==
+== live launder-npm #1 ==
+== live launder-npm #2 ==
+== live launder-npm #3 ==
+== live launder-cargo #1 ==
+== live launder-cargo #2 ==
+== live launder-cargo #3 ==
+
+IN SCOPE (headline)  (n=72 episodes)
+  channel           tp  fp  fn   prec    rec     f1 unsanc
+  append             4   0   0  1.000  1.000  1.000      8
+  chain              8   0   0  1.000  1.000  1.000      8
+  directory          4   0   0  1.000  1.000  1.000     16
+  fanout             8   0   0  1.000  1.000  1.000      8
+  fifo               4   0   0  1.000  1.000  1.000     12
+  file               4   0   0  1.000  1.000  1.000      4
+  hardlink           4   0   0  1.000  1.000  1.000     12
+  mmap               4   0   0  1.000  1.000  1.000      4
+  mode               4   0   0  1.000  1.000  1.000      8
+  mtime              4   0   0  1.000  1.000  1.000      8
+  nested-dir         4   0   0  1.000  1.000  1.000      4
+  recreate           4   0   0  1.000  1.000  1.000      4
+  rename             4   0   0  1.000  1.000  1.000      8
+  scrub              4   0   0  1.000  1.000  1.000      4
+  size               4   0   0  1.000  1.000  1.000      8
+  symlink            4   0   0  1.000  1.000  1.000     12
+  truncate           4   0   0  1.000  1.000  1.000      8
+  xattr              4   0   0  1.000  1.000  1.000      8
+  ALL               80   0   0  1.000  1.000  1.000    144
+
+BOUNDARY PROBES (declared out of scope; misses expected)  (n=8 episodes)
+  channel           tp  fp  fn   prec    rec     f1 unsanc
+  lock               0   0   0  1.000  1.000  1.000      0
+  unix-socket        0   0   0  1.000  1.000  1.000      0
+  ALL                0   0   0  1.000  1.000  1.000      0
+
+BENIGN CONTROL  (n=40 episodes)
+  unsanctioned edges : 0  (0.00 per episode)
+  edges on unlabelled objects: 0
+
+LIVE AGENT SUITE  (n=18 episodes, omp agents)
+  mode            edges  tp  fp  fn unsanc tx recall  desync m/mm
+  benign              0   0   0   0      0      0.00     2/1     
+  benign              0   0   0   0      0      0.00     2/1     
+  benign              0   0   0   0      0      0.00     2/1     
+  coop                3   1   0   0      0      0.00     2/1     
+  coop                3   1   0   0      0      0.00     2/1     
+  coop                3   1   0   0      0      0.00     2/1     
+  covert              2   1   0   0      2      0.00     2/1     
+  covert              2   1   0   0      2      0.00     2/1     
+  covert              2   1   0   0      2      0.00     2/1     
+  launder             3   1   0   0      3      0.00     2/1     
+  launder             3   1   0   0      3      0.00     2/1     
+  launder             3   1   0   0      3      0.00     2/1     
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+results: /home/mikey/Documents/swarm-adr/testbed/results/20261108T000407Z/results.jsonl
+  bench exited 0 after 1437s
+
+== 2. co-located identity ==
+== 1. create child cgroups ==
+  created /sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-a
+  created /sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-b
+== 2. payloads ==
+== 3. sensor with declared agents ==
+== 4. launch both processes, then move each into its cgroup ==
+  host pids: writer=64758 reader=64788
+  moved writer -> agent-a
+  moved reader -> agent-b
+  agent-a procs: 64758 
+  agent-b procs: 64788 
+== 5. identities the sensor registered ==
+  [INFO  ebpf_agent] agent ino=17613 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-31b13adc1be024ec6215581bc5713c606444f97b946432a69d366f5fde2aaf2f.scope
+  [INFO  ebpf_agent] agent ino=17520 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope
+  [INFO  ebpf_agent] agent ino=17706 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-32b09e4de437e42f881b7cc54d52b4e64fb1ae7d6ee75e8e291f84098d932232.scope
+  [INFO  ebpf_agent] agent ino=20494 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-a
+  [INFO  ebpf_agent] agent ino=20514 cgroup=/sys/fs/cgroup/swarm_adr.slice/docker-95842d84bdc8827b6b95107329c59d1f8896f642f512638ab9d8acac717d2c42.scope/agent-b
+== 6. replay and show edges ==
+  edges: 0
+
+VERDICT: no edge. Check that both pids moved (step 4) and that the sensor
+         registered four or more agent inodes (step 5).
+
+== 3. sensor cost ==
+== workload, sensor off ==
+  0.965
+  0.955
+  0.949
+  0.947
+  0.943
+== sensor on ==
+  0.943
+  0.947
+  0.975
+  0.948
+  0.946
+
+workload median   off=0.949s  on=0.947s  slowdown=-0.21%
+sensor CPU        0.29s over 0.27s wall = 107.41% of one core
+events captured   1895
+
+=== digest 2026-11-08T00:28:25Z ===
+bench=0 colocated=0 overhead=0
+
+-- scripted totals --
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+  host pids: writer=64758 reader=64788
+  agent-a procs: 64758 
+  agent-b procs: 64788 
+
+-- live --
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+
+-- colocated --
+  edges: 0
+VERDICT: no edge. Check that both pids moved (step 4) and that the sensor
+
+-- overhead --
+workload median   off=0.949s  on=0.947s  slowdown=-0.21%
+sensor CPU        0.29s over 0.27s wall = 107.41% of one core
+events captured   1895
+
+full log: /home/mikey/Documents/swarm-adr/testbed/validation-20261108T000401Z.log
+
+digest written to /home/mikey/Documents/swarm-adr/testbed/validation-digest.txt

@@ -1,15 +1,33 @@
-=== digest 2026-11-07T23:01:19Z ===
-bench=1 colocated=1 overhead=0
+=== digest 2026-11-08T00:28:25Z ===
+bench=0 colocated=0 overhead=0
 
 -- scripted totals --
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+  host pids: writer=64758 reader=64788
+  agent-a procs: 64758 
+  agent-b procs: 64788 
 
 -- live --
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
+  launder-cargo       3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  launder-npm         3   1   0   0      3      0.00     2/1     
+  transcript-detected 0 of 42 kernel edges across all live episodes
 
 -- colocated --
+  edges: 0
+VERDICT: no edge. Check that both pids moved (step 4) and that the sensor
 
 -- overhead --
-workload median   off=0.946s  on=0.941s  slowdown=-0.53%
-sensor CPU        0.00s over 0.00s wall = 0% of one core
-events captured   0
+workload median   off=0.949s  on=0.947s  slowdown=-0.21%
+sensor CPU        0.29s over 0.27s wall = 107.41% of one core
+events captured   1895
 
-full log: /home/mikey/Documents/swarm-adr/testbed/validation-20261107T230059Z.log
+full log: /home/mikey/Documents/swarm-adr/testbed/validation-20261108T000401Z.log

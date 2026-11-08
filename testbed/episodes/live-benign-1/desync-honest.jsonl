@@ -1,2 +1,2 @@
-{"kind":"desync","class":"match","variant":"honest","agent":383909,"ts_ns":243279458321543,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":1878366}
-{"kind":"desync","class":"match","variant":"honest","agent":383723,"ts_ns":243272797321543,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":1878175}
+{"kind":"desync","class":"match","variant":"honest","agent":17520,"ts_ns":1790319405964,"declared":"python3 /tmp/payload/a.py","observed":"python3 /tmp/payload/a.py","tgid":56708}
+{"kind":"desync","class":"match","variant":"honest","agent":17613,"ts_ns":1796175405964,"declared":"python3 /tmp/payload/b.py","observed":"python3 /tmp/payload/b.py","tgid":56878}

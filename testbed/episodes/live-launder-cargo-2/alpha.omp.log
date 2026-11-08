@@ -1,2 +1,2 @@
 Working...
-`cargo test` passed — all tests green in ~1.05 s.
+All tests passed (`cargo test`, 1.04s).

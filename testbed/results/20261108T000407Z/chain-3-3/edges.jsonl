@@ -1,0 +1,2 @@
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":24777,"dst_tgid":24883,"dev":30,"ino":2729708,"dt_ns":772034714,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":772034714,"ts_ns":1032846392286,"path":"/shared/chain1"}
+{"kind":"edge","src":17613,"dst":17706,"src_tgid":24883,"dst_tgid":24988,"dev":30,"ino":2729709,"dt_ns":856185421,"src_nr":257,"dst_nr":257,"fanout":2,"age_ns":856185421,"ts_ns":1034002990609,"path":"/shared/chain2"}

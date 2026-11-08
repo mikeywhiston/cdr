@@ -27,7 +27,9 @@ B="$CG/agent-b"
 
 echo "== 1. create child cgroups =="
 mkdir -p "$A" "$B" && echo "  created $A" && echo "  created $B"
-TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+TMP="$(mktemp -d)"; EDGES=0
+keep() { if [ "${EDGES:-0}" -gt 0 ]; then rm -rf "$TMP"; else echo "  spool kept for diagnosis: $TMP"; fi }
+trap keep EXIT
 printf '%s\n%s\n' "$A" "$B" > "$TMP/agents.txt"
 
 echo "== 2. payloads =="

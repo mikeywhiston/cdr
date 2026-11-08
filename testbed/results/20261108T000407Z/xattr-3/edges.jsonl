@@ -1,0 +1,2 @@
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":51438,"dst_tgid":51546,"dev":30,"ino":2730525,"dt_ns":1867236413,"src_nr":257,"dst_nr":191,"fanout":2,"age_ns":1867236413,"ts_ns":1623502822525,"path":"/shared/xattrfile"}
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":51438,"dst_tgid":51546,"dev":30,"ino":2730525,"dt_ns":666874581,"src_nr":188,"dst_nr":191,"fanout":2,"age_ns":1867236413,"ts_ns":1623502822525,"path":"/shared/xattrfile"}
