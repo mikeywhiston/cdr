@@ -33,6 +33,16 @@ Collusion Detection and Response:\\ Oversight That Outlives the Transcript$^{1}$
   \texttt{mikey@mikeywhiston.dev}\\[0.7em]
   {\footnotesize $^{1}$Research conducted at the Swarm Alignment Hackathon, November 2026}}
 
+
+% float placement: a full-width figure should share a page with text
+\raggedbottom
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{1.0}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+
 \begin{document}
 \maketitle
 
@@ -118,9 +128,10 @@ which keeps the mechanism auditable and its alarms revisable.
 
 \section{Methods}
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\textwidth]{figures/fig1.pdf}
+% trim removes the Letter-page whitespace around the drawing; recompute if fig1.pdf is re-exported
+\includegraphics[width=\textwidth, trim={14 398 4 143}, clip]{figures/fig1.pdf}
 \caption{Inside the dashed container, everything is written by the agent and can be rewritten by it, so the transcript is a claim. The supervisor model has no input but that claim, and cannot separate a forged transcript from an honest one that simply omits the action. The kernel witnesses the syscall instead, resolves which agent performed the operation and on which object, and emits the edge when two agents touch the same object. The object is joined on device and inode, and the path is shown only for the reader. Agents \texttt{alpha} and \texttt{beta} are two containers in a sandbox slice.}
 \label{fig:trust}
 \end{figure*}
