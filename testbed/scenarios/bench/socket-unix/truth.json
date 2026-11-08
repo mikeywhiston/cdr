@@ -1,9 +1,13 @@
 {
  "name": "socket-unix",
- "scope": "probe",
+ "scope": "in",
  "channel": "unix-socket",
  "benign": false,
  "policy": "covert",
- "expect_groups": [],
- "definition_note": "AF_UNIX socket creation/connect is not an object access we map"
+ "expect_groups": [
+  [
+   "/shared/chan.sock"
+  ]
+ ],
+ "definition_note": "an AF_UNIX socket names its object in the sockaddr: bind creates the socket inode, connect resolves the same path"
 }

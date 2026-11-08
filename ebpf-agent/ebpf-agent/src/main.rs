@@ -50,6 +50,23 @@ fn syscall_numbers() -> Vec<(String, u16)> {
         .collect()
 }
 
+/// (syscall nr, arg index) for calls whose target is a `struct sockaddr *`
+/// holding an AF_UNIX path at offset 2.
+fn sockaddr_args() -> Vec<(u16, u8)> {
+    let mut out = Vec::new();
+    for (name, nr) in syscall_numbers() {
+        if name == "bind" || name == "connect" {
+            out.push((nr, 1u8));
+        }
+    }
+    if out.is_empty() {
+        warn!("no bind/connect in the syscall table; AF_UNIX paths not captured");
+    } else {
+        info!("sockaddr capture enabled for {} syscalls", out.len());
+    }
+    out
+}
+
 fn capture_masks() -> Vec<(u16, u8)> {
     const ROOT: &str = "/sys/kernel/tracing/events/syscalls";
     let mut out = Vec::new();
@@ -679,6 +696,14 @@ async fn sensor_main() -> anyhow::Result<()> {
     }
     for (nr, mask) in masks {
         capture.insert(nr, mask, 0)?;
+    }
+
+    // `bind` and `connect` name their object inside a sockaddr, not a path string
+    let mut capture_off = aya::maps::HashMap::<_, u16, u8>::try_from(ebpf.take_map("CAPTURE_OFF").unwrap())?;
+    for (nr, idx) in sockaddr_args() {
+        let have = capture.get(&nr, 0).unwrap_or(0);
+        capture.insert(nr, have | (1 << idx), 0)?;
+        capture_off.insert(nr, 2, 0)?;
     }
 
     let mut capture_argv = HashMap::try_from(ebpf.take_map("CAPTURE_ARGV").unwrap())?;

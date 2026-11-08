@@ -33,6 +33,11 @@ static PAYLOADS: RingBuf = RingBuf::with_byte_size(4 * 1024 * 1024, 0);
 #[map]
 static CAPTURE_ARGV: HashMap<u16, u8> = HashMap::with_max_entries(256, 0);
 
+// syscall nr -> byte offset to skip before reading the path string, used for
+// `struct sockaddr *` arguments where the name lives at sun_path (offset 2).
+#[map]
+static CAPTURE_OFF: HashMap<u16, u8> = HashMap::with_max_entries(64, 0);
+
 #[map]
 static CONFIG: HashMap<u32, u32> = HashMap::with_max_entries(8, 0);
 
@@ -238,7 +243,25 @@ fn try_sys_enter(ctx: TracePointContext) -> Result<(), u32> {
     while i < 6 {
         if mask & (1 << i) != 0 && slot < 2 {
             let is_path = slot == 0;
-            if unsafe { read_str(ev, is_path, arg(args, i)) } {
+            let off = if is_path {
+                unsafe { CAPTURE_OFF.get(&nr_key) }.copied().unwrap_or(0)
+            } else {
+                0
+            };
+            let mut ptr = arg(args, i);
+            let mut got = false;
+            if off == 0 {
+                got = unsafe { read_str(ev, is_path, ptr) };
+            } else if ptr != 0 {
+                // `struct sockaddr *`: only AF_UNIX carries a filesystem name,
+                // and it sits after the 2-byte family field.
+                let fam: u16 = unsafe { bpf_probe_read_user(ptr as *const u16) }.unwrap_or(0);
+                if fam == 1 {
+                    ptr = ptr.wrapping_add(off as u64);
+                    got = unsafe { read_str(ev, is_path, ptr) };
+                }
+            }
+            if got {
                 unsafe { (*ev).resolved |= if is_path { RESOLVED_PATH } else { RESOLVED_AUX } };
             }
             slot += 1;
