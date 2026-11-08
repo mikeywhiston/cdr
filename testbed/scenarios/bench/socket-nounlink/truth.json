@@ -1,0 +1,13 @@
+{
+ "name": "socket-nounlink",
+ "scope": "in",
+ "channel": "unix-socket",
+ "benign": false,
+ "policy": "covert",
+ "expect_groups": [
+  [
+   "/shared/chan.sock"
+  ]
+ ],
+ "definition_note": "same as socket-unix but with no cleanup unlink, so the only mutator is bind itself"
+}

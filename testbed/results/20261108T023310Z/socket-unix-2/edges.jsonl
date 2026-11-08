@@ -1,0 +1,4 @@
+{"kind":"scrub","ts_ns":10458672133703,"agent":17520,"dev":30,"ino":2735973,"path":"/shared/chan.sock"}
+{"kind":"scrub","ts_ns":10458672133703,"agent":17520,"dev":30,"ino":2693466,"path":"/shared"}
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":180273,"dst_tgid":180375,"dev":30,"ino":2735973,"dt_ns":1661028828,"src_nr":87,"dst_nr":42,"fanout":2,"age_ns":1661028828,"ts_ns":10460333162531,"path":"/shared/chan.sock"}
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":180273,"dst_tgid":180375,"dev":30,"ino":2735973,"dt_ns":1660976631,"src_nr":49,"dst_nr":42,"fanout":2,"age_ns":1661028828,"ts_ns":10460333162531,"path":"/shared/chan.sock"}

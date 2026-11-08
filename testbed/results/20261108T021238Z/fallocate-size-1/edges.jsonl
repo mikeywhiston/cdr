@@ -1,0 +1,2 @@
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":116380,"dst_tgid":116495,"dev":30,"ino":2733702,"dt_ns":2036215391,"src_nr":257,"dst_nr":262,"fanout":2,"age_ns":2036215391,"ts_ns":8890768033218,"path":"/shared/bigfile"}
+{"kind":"edge","src":17520,"dst":17613,"src_tgid":116380,"dst_tgid":116495,"dev":30,"ino":2733702,"dt_ns":833598904,"src_nr":76,"dst_nr":262,"fanout":2,"age_ns":2036215391,"ts_ns":8890768033218,"path":"/shared/bigfile"}

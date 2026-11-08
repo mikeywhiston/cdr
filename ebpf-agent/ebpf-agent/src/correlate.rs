@@ -48,6 +48,7 @@ fn is_mutator(nr: u64, a: &[u64; 6]) -> bool {
         280 | 261 => true,
         1 | 18 | 20 => true,
         74 | 75 => true,
+        49 => true, // bind: creates the socket inode that connect later resolves
         _ => false,
     }
 }

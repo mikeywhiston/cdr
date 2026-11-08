@@ -1,0 +1,8 @@
+{"name":"socket-nounlink","scope":"in","channel":"unix-socket","benign":false,"edges":1,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":1,"ignored_parent":0}
+{"name":"socket-nounlink","scope":"in","channel":"unix-socket","benign":false,"edges":1,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":1,"ignored_parent":0}
+{"name":"socket-nounlink","scope":"in","channel":"unix-socket","benign":false,"edges":1,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":1,"ignored_parent":0}
+{"name":"socket-nounlink","scope":"in","channel":"unix-socket","benign":false,"edges":1,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":1,"ignored_parent":0}
+{"name":"socket-unix","scope":"in","channel":"unix-socket","benign":false,"edges":2,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":2,"ignored_parent":0}
+{"name":"socket-unix","scope":"in","channel":"unix-socket","benign":false,"edges":2,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":2,"ignored_parent":0}
+{"name":"socket-unix","scope":"in","channel":"unix-socket","benign":false,"edges":2,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":2,"ignored_parent":0}
+{"name":"socket-unix","scope":"in","channel":"unix-socket","benign":false,"edges":2,"tp":1,"fp":0,"fn":0,"precision":1.000,"recall":1.000,"f1":1.000,"unsanctioned":2,"ignored_parent":0}
