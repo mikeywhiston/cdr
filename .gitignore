@@ -3,3 +3,4 @@ testbed/.env
 /*.jsonl
 testbed/*.jsonl
 BLUEPRINT.md
+testbed/CODE_FROZEN.txt
