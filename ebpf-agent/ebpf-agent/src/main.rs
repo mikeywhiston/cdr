@@ -67,6 +67,29 @@ fn sockaddr_args() -> Vec<(u16, u8)> {
     out
 }
 
+/// Credentials come from the environment when present, so that `testbed/.env` can
+/// supply them; the flags still override, and the fallbacks match the old defaults.
+fn env_or(key: &str, default: &str) -> String {
+    std::env::var(key)
+        .ok()
+        .filter(|v| !v.trim().is_empty())
+        .unwrap_or_else(|| default.to_string())
+}
+
+fn es_user() -> String {
+    env_or("ES_USER", "cdr")
+}
+
+fn default_pass_file() -> String {
+    let home = std::env::var("HOME").unwrap_or_else(|_| "/root".into());
+    let configured = env_or("ES_PASS_FILE", &format!("{home}/.cdr-es-pass"));
+    // a shell would expand a leading ~; Rust does not
+    match configured.strip_prefix("~/") {
+        Some(rest) => format!("{home}/{rest}"),
+        None => configured,
+    }
+}
+
 fn capture_masks() -> Vec<(u16, u8)> {
     const ROOT: &str = "/sys/kernel/tracing/events/syscalls";
     let mut out = Vec::new();
@@ -526,8 +549,12 @@ fn main() -> anyhow::Result<()> {
             let opt = |n: &str, d: &str| {
                 a.iter().position(|x| x == n).and_then(|i| a.get(i + 1)).cloned().unwrap_or_else(|| d.to_string())
             };
-            let pass = std::fs::read_to_string(opt("--password-file", "/home/mikey/.cdr-es-pass")).unwrap_or_default();
-            return es::init(&opt("--es", "http://127.0.0.1:9200"), "cdr", pass.trim());
+            let pass_file = opt("--password-file", &default_pass_file());
+            let pass = std::fs::read_to_string(&pass_file).unwrap_or_default();
+            if pass.trim().is_empty() {
+                eprintln!("[WARN  ebpf_agent] no ES password read from {pass_file}");
+            }
+            return es::init(&opt("--es", "http://127.0.0.1:9200"), &es_user(), pass.trim());
         }
         Some("run") | None => {}
         Some(other) => anyhow::bail!("unknown command {other}: expected run|replay|baseline"),
@@ -552,7 +579,7 @@ fn replay() -> anyhow::Result<()> {
     let edges_path = opt("--edges", "edges.jsonl");
     let index = opt("--index", "cdr-edges");
     let es_url = args.iter().position(|a| a == "--es").and_then(|i| args.get(i + 1)).cloned();
-    let pass_file = opt("--password-file", "/home/mikey/.cdr-es-pass");
+    let pass_file = opt("--password-file", &default_pass_file());
     let dead_letter = opt("--dead-letter", "es-dead.ndjson");
 
     let text = if input == "-" {
@@ -568,7 +595,10 @@ fn replay() -> anyhow::Result<()> {
     let (tx, shipper) = match es_url {
         Some(url) => {
             let pass = std::fs::read_to_string(&pass_file).unwrap_or_default();
-            let sink = es::Sink::new(&url, "cdr", pass.trim(), &index, &dead_letter);
+            if pass.trim().is_empty() {
+                eprintln!("[WARN  ebpf_agent] no ES password read from {pass_file}");
+            }
+            let sink = es::Sink::new(&url, &es_user(), pass.trim(), &index, &dead_letter);
             let (tx, rx) = std::sync::mpsc::sync_channel::<String>(10_000);
             (Some(tx), Some(es::spawn_shipper(sink, rx)))
         }
@@ -758,7 +788,7 @@ async fn sensor_main() -> anyhow::Result<()> {
     let window_ms: u64 = opt("--window-ms", "30000").parse().unwrap_or(30_000);
     let es_url = args.iter().position(|a| a == "--es").and_then(|i| args.get(i + 1)).cloned();
     let index = opt("--index", "cdr-edges");
-    let pass_file = opt("--password-file", "/home/mikey/.cdr-es-pass");
+    let pass_file = opt("--password-file", &default_pass_file());
     let dead_letter = opt("--dead-letter", "es-dead.ndjson");
 
     let mut spool = BufWriter::new(File::create(&spool_path)?);
@@ -768,7 +798,10 @@ async fn sensor_main() -> anyhow::Result<()> {
     let (tx, shipper) = match es_url {
         Some(url) => {
             let pass = std::fs::read_to_string(&pass_file).unwrap_or_default();
-            let sink = es::Sink::new(&url, "cdr", pass.trim(), &index, &dead_letter);
+            if pass.trim().is_empty() {
+                eprintln!("[WARN  ebpf_agent] no ES password read from {pass_file}");
+            }
+            let sink = es::Sink::new(&url, &es_user(), pass.trim(), &index, &dead_letter);
             let (tx, rx) = std::sync::mpsc::sync_channel::<String>(10_000);
             (Some(tx), Some(es::spawn_shipper(sink, rx)))
         }
