@@ -4,3 +4,4 @@ testbed/.env
 testbed/*.jsonl
 BLUEPRINT.md
 testbed/CODE_FROZEN.txt
+.idea/
